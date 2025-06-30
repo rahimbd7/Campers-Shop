@@ -1,0 +1,14 @@
+# General
+.env
+.DS_Store
+
+# Node modules
+backend/node_modules/
+frontend/node_modules/
+
+# Builds and dist
+backend/dist/
+frontend/dist/
+
+#helper
+git_initial.txt
