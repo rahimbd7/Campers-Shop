@@ -2,6 +2,7 @@ import express, { Application } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path"
+import router from "./app/routes/routes";
 
 
 const app:Application = express();
@@ -18,7 +19,7 @@ app.get("/", (req, res) => {
 });
 
 
-
+app.use('/api', router)
 
 
 export default app
