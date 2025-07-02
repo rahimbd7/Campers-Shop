@@ -1,6 +1,7 @@
 # General
 .env
 .DS_Store
+.vscode
 
 # Node modules
 backend/node_modules/
