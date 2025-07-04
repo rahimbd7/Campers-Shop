@@ -6,19 +6,24 @@ import notFound from '../middlewares/notFound,';
 import globalErrorHandler from '../middlewares/globalErrorsHandler';
 import { UserRoutes } from '../modules/users/users.routes';
 import { CategoryRoutes } from '../modules/category/category.route';
+import { ProductRoutes } from '../modules/products/products.routes';
 
 
 
 
 const router = express.Router();
 const moduleRoutes = [
-   {
-       path: '/users',
-       route: UserRoutes
+    {
+        path: '/users',
+        route: UserRoutes
     },
-   {
-       path: '/category',
-       route: CategoryRoutes
+    {
+        path: '/category',
+        route: CategoryRoutes
+    },
+    {
+        path: '/products',
+        route: ProductRoutes
     },
 
 ]
