@@ -1,10 +1,11 @@
 import { model, Schema } from "mongoose";
-import { IUser } from "./users.interface";
+import { IUser, IUserService } from "./users.interface";
 import bcrypt from 'bcrypt'
 import config from "../../config";
 
 
-const userSchema = new Schema<IUser>({
+
+const userSchema = new Schema<IUser, IUserService>({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
@@ -39,6 +40,17 @@ userSchema.pre('findOneAndUpdate', async function (next) {
   next();
 });
 
-const UserModel = model<IUser>('User', userSchema);
 
+userSchema.statics.isUserExists = async function (email: string) {
+  return await UserModel.findOne({ email }).select('+password');
+};
+
+userSchema.statics.isPasswordMatched = async function (
+  plainTextPassword,
+  hashedPassword,
+) {
+  return await bcrypt.compare(plainTextPassword, hashedPassword)
+}
+
+const UserModel = model<IUser, IUserService>('User', userSchema);
 export default UserModel;

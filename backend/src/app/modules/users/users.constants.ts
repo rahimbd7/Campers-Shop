@@ -1,3 +1,7 @@
-type TUserRole = 'user' | 'admin';
+ const USER_ROLE = {
+    user: 'user',
+    admin: 'admin',
+} as const;
 
-export const userRole: TUserRole[] = ['user', 'admin'];
+
+export type TUSER = keyof typeof USER_ROLE;
