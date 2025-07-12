@@ -8,6 +8,7 @@
 import { Types } from "mongoose";
 import { ICartItem } from "./cart.interface";
 import CartModel from "./cart.model";
+import ProductModel from "../products/products.model";
 
 const getCartByUserFromDB = async (userId: string) => {
     return await CartModel.findOne({ userId }).populate("items.productId");
@@ -77,10 +78,28 @@ const mergeCart = async (
 const clearCart = async (userId: Types.ObjectId) => {
     return await CartModel.findOneAndDelete({ userId });
 }
+
+const getProductDetailsOfCartItems = async (cartItems: ICartItem[]) => {
+  const productIds = cartItems.map(item => item.productId);
+  const products = await ProductModel.find({ _id: { $in: productIds } });
+
+  // Enrich with quantity
+  const enrichedProducts = products.map(product => {
+    const match = cartItems.find(item => item.productId.equals(product._id));
+    return {
+      ...product.toObject(),
+      quantity: match?.quantity || 1
+    };
+  });
+
+  return enrichedProducts;
+};
+
 export const CartService = {
     getCartByUserFromDB,
     addToCart,
     removeFromCart,
     mergeCart,
-    clearCart
+    clearCart,
+    getProductDetailsOfCartItems
 }

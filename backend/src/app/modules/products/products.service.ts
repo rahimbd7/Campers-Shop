@@ -61,10 +61,16 @@ const getAllProductsFromDB = async (filters: any) => {
   return await ProductModel.findByIdAndUpdate(id,{ isDeleted: true });
 };
 
+const getProductByCategoryIdFromDB = async (categoryId: string) => {
+  return await ProductModel.find({ categoryId }).populate('categoryId');
+};
+
+
 export const ProductService = {
   createProductIntoDB,
   getAllProductsFromDB,
   getProductByIdFromDB,
   updateProductIntoDB,
-  deleteProductByIdFromDB
+  deleteProductByIdFromDB,
+  getProductByCategoryIdFromDB
 };

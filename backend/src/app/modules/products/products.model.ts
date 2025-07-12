@@ -11,7 +11,11 @@ const productSchema = new Schema<IProduct>({
   rating: { type: Number, default: 0 },
   isFeatured: { type: Boolean, default: false },
   isDeleted: { type: Boolean, default: false },
-}, { timestamps: true });
+},{
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  });
 
 const ProductModel = model<IProduct>('Product', productSchema);
 export default ProductModel;

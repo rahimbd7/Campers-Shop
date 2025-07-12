@@ -64,10 +64,21 @@ const clearCart = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getProductDetailsFromCart= catchAsync(async (req: Request, res: Response) => {
+  const result = await CartService.getProductDetailsOfCartItems(req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Product details fetched successfully",
+    data: result,
+  });
+})
+
 export const CartController = {
   getCartByUser,
   addToCart,
   removeFromCart,
   mergeCart,
   clearCart,
+  getProductDetailsFromCart
 };

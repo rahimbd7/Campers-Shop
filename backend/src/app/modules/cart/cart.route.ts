@@ -6,6 +6,7 @@ import { CartValidate } from "./cart.validation";
 const cartRouter = express.Router();
 
 cartRouter.get("/get-cart-by-user/:userId", validateRequest(CartValidate.getCartByUser), CartController.getCartByUser);
+cartRouter.get('/details', CartController.getProductDetailsFromCart);
 cartRouter.post("/add-to-cart/:userId", validateRequest(CartValidate.addToCart), CartController.addToCart);
 cartRouter.delete("/remove-from-cart/:userId", validateRequest(CartValidate.removeFromCart), CartController.removeFromCart);
 cartRouter.post("/merge-cart/:userId", validateRequest(CartValidate.mergeCart), CartController.mergeCart);

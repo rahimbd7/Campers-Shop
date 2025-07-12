@@ -13,6 +13,7 @@ productRouter.post(
 );
 
 productRouter.get("/get-all-products", ProductController.getAllProducts);
+productRouter.get("/category/:categoryId", ProductController.getProductByCategory);
 productRouter.get("/get-product/:id", ProductController.getProductById);
 productRouter.patch(
   "/update-product/:id",
