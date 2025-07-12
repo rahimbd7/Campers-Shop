@@ -1,8 +1,12 @@
 import { NavLink } from "react-router-dom";
 import getMenu from "./menu";
 import { FiShoppingCart } from "react-icons/fi";
+import { useAppSelector } from "../../redux/hooks";
 
 const Navbar = () => {
+
+  const numberOfCartItems = useAppSelector((state) => state.cart.cartItems.length);
+  console.log('length--->',numberOfCartItems);
   const menu_items = getMenu("admin", true);
   return (
     <div>
@@ -49,7 +53,12 @@ const Navbar = () => {
           </ul>
         </div>
         <div className="navbar-end">
-          <p><FiShoppingCart /></p>
+          <p><FiShoppingCart  size={25}/></p>
+           {numberOfCartItems > 0 && (
+          <span className="badge badge-md indicator-item bg-primary text-white">
+            {numberOfCartItems}
+          </span>
+        )}
           <a className="btn">Button</a>
         </div>
       </div>

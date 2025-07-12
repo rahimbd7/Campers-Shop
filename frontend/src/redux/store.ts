@@ -14,20 +14,22 @@ import {
   REGISTER,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import { cartReducer } from "./features/cart/cartSlice";
 
 
 const rootReducer = combineReducers({
     [baseApi.reducerPath]: baseApi.reducer,
     category: categoryReducer,
     auth: authReducer,
-    product: productReducer
+    product: productReducer,
+    cart: cartReducer
 })
 
 
 const persistConfig = {
     key:"root",
     storage,
-    whitelist:["auth", "category", "product"]
+    whitelist:["auth", "category", "product", "cart"]
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
