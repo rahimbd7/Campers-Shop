@@ -83,17 +83,17 @@ const getProductDetailsOfCartItems = async (cartItems: ICartItem[]) => {
   const productIds = cartItems.map(item => item.productId);
   const products = await ProductModel.find({ _id: { $in: productIds } });
 
-  // Enrich with quantity
   const enrichedProducts = products.map(product => {
-    const match = cartItems.find(item => item.productId.equals(product._id));
+    const match = cartItems.find(item => item.productId.toString() === product._id.toString());
     return {
       ...product.toObject(),
-      quantity: match?.quantity || 1
+      quantity: match?.quantity || 1,
     };
   });
 
   return enrichedProducts;
 };
+
 
 export const CartService = {
     getCartByUserFromDB,

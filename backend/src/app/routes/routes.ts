@@ -7,6 +7,7 @@ import globalErrorHandler from '../middlewares/globalErrorsHandler';
 import { UserRoutes } from '../modules/users/users.routes';
 import { CategoryRoutes } from '../modules/category/category.route';
 import { ProductRoutes } from '../modules/products/products.routes';
+import { CartRoutes } from '../modules/cart/cart.route';
 
 
 
@@ -25,6 +26,10 @@ const moduleRoutes = [
         path: '/products',
         route: ProductRoutes
     },
+    {
+        path: '/cart',
+        route: CartRoutes
+    }
 
 ]
 
