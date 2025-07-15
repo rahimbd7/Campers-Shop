@@ -4,6 +4,7 @@ import  Home from "../pages/Home/Home";
 import  AllProducts from "../pages/Products/AllProducts";
 import ProductsByCategory from './../pages/Products/ProductsByCategory';
 import ProductDetails from "../pages/Products/ProductDetails";
+import CartPage from "../pages/Cart/CartPage";
 
 const routes = createBrowserRouter([
     {
@@ -25,6 +26,10 @@ const routes = createBrowserRouter([
             {
                 path:'/product/:productId',
                 element:<ProductDetails/>
+            },
+            {
+                path:'/view-all-cart-items',
+                element:<CartPage/>
             }
         ],
     },

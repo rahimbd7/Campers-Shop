@@ -1,8 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProductModal from "./ProductCartModal";
-
-const ProductCart = ({ cartData }) => {
+interface cartData {
+  _id: string;
+  description: string;
+  name: string;
+  price: number;
+  images: string[];
+}
+const ProductCart = ({ cartData }: { cartData: cartData }) => {
   const { _id, description, name, price, images = [] } = cartData || {};
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
@@ -20,7 +26,7 @@ const ProductCart = ({ cartData }) => {
       </figure>
       <div className="card-body">
         <h2 className="card-title justify-center text-lg text-center">{name}</h2>
-        <p className="text-sm text-justify">{description.slice(0, 80)}...</p>
+        <p className="text-sm text-justify">{description}</p>
 
         <div className="flex flex-col gap-3 mt-4">
           <p className="font-bold text-xl text-center text-primary">${price}</p>
@@ -47,6 +53,7 @@ const ProductCart = ({ cartData }) => {
           productId={_id}
           name={name}
           image={image}
+          initialQuantity={1}
           closeModal={() => setIsModalOpen(false)}
         />
       )}
