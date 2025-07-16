@@ -7,10 +7,8 @@ import type { IProduct } from "../../interface/IProduct";
 
 
 const AllProducts = () => {
-    const { data: products, isLoading, isError } = useGetAllProductsQuery();
+    useGetAllProductsQuery();
     const productData: IProduct[] = useSelector((state: RootState) => state.product.products);
-    
-    console.log('all products',productData);
     return (
         <div>
             <h1 className="text-3xl text-center py-8">All Products</h1>

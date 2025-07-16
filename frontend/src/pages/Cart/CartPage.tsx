@@ -13,7 +13,7 @@ const CartPage = () => {
   const user = useSelector((state: RootState) => state.auth.user);
   const navigate = useNavigate();
 
-  const { data: responseData, isLoading } = useGetAllProductsDetailsOfCartItemsQuery(cartItems);
+  const { data: responseData } = useGetAllProductsDetailsOfCartItemsQuery(cartItems);
   const productsDetailsOfCartItems = responseData?.data || [];
 
   const [editingItem, setEditingItem] = useState<null | {
@@ -22,6 +22,10 @@ const CartPage = () => {
     image: string;
     initialQuantity?: number;
   }>(null);
+
+  const handleRemoveFromCart = (productId: string) => {
+    dispatch(removeFromCart(productId));
+  };
 
   const handleCheckout = () => {
     if (!user) {
@@ -52,7 +56,6 @@ const CartPage = () => {
           <tbody>
             {productsDetailsOfCartItems.map((item) => (
               <tr key={item._id}>
-                <td>{item.productId}</td>
                 <td>
                   <img
                     src={item.image}
@@ -82,7 +85,7 @@ const CartPage = () => {
                 <td>
                   <button
                     className="btn btn-xs btn-error"
-                    onClick={() => dispatch(removeFromCart(item.productId))}
+                    onClick={() => dispatch(removeFromCart(item?._id))}
                   >
                     Remove
                   </button>
@@ -108,6 +111,7 @@ const CartPage = () => {
           name={editingItem.name}
           image={editingItem.image}
           initialQuantity={editingItem.initialQuantity}
+          isEditMode={true}
           closeModal={() => setEditingItem(null)}
         />
       )}

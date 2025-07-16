@@ -9,7 +9,7 @@ export const productApi = baseApi.injectEndpoints({
         url: "/products/get-all-products",
       }),
       providesTags: ["Product"],
-      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+      async onQueryStarted(_getAllProducts, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
           dispatch(setProducts(data.data));

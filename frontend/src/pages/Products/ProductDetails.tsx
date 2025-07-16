@@ -10,9 +10,8 @@ import { useState } from "react";
 const ProductDetails = () => {
   const { productId } = useParams();
   const { data: product, isLoading } = useGetProductByIdQuery(productId as string);
-
-  const singleProduct = useAppSelector((state: RootState) => state.product.productById);
-console.log(singleProduct);
+  console.log('details data', product?.data);
+  const singleProduct = product?.data || {};
 
 const [quantity, setQuantity] = useState(1);
 

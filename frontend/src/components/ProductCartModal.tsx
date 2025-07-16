@@ -2,12 +2,14 @@
 import { useState } from "react";
 import { useAddToCart } from "../utils/CartUtils/useAddToCart";
 
+
 interface ProductModalProps {
   productId: string;
   name: string;
   image: string;
   closeModal: () => void;
-  initialQuantity?: number; // ✅ optional
+  initialQuantity?: number;
+  isEditMode?: boolean; // ✅ optional
 }
 
 const ProductModal: React.FC<ProductModalProps> = ({
@@ -16,12 +18,13 @@ const ProductModal: React.FC<ProductModalProps> = ({
   image,
   closeModal,
   initialQuantity,
+  isEditMode,
 }) => {
   const [quantity, setQuantity] = useState<number>(initialQuantity || 1);
   const addToCart = useAddToCart();
   const handleAddToCart = () => {
     if (quantity && productId) {
-      addToCart(productId, quantity); // This must call the hook correctly
+      addToCart(productId, quantity, isEditMode ?? false); // This must call the hook correctly
     }
     closeModal();
   };
