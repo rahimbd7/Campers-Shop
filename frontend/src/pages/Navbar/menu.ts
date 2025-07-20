@@ -1,29 +1,40 @@
 // menu.ts
 
-const menu_item = [
+import { logout } from "../../redux/features/auth/authSlice";
+
+export type MenuItem = {
+  name: string;
+  path?: string;
+  logout?: boolean;
+};
+
+
+
+
+const menu_item: MenuItem[] = [
   { name: "Home", path: "/" },
   { name: "Product", path: "/products" },
 ];
 
-const guestMenu = [
+const guestMenu: MenuItem[] = [
   { name: "Login", path: "/login" },
   { name: "Register", path: "/register" },
 ];
 
-const userMenu = [
+const userMenu: MenuItem[] = [
   { name: "Profile", path: "/profile" },
   { name: "My Cart", path: "/my-cart" },
-  { name: "Logout", path: "/logout" },
+  { name: "Logout",logout:true },
 ];
 
-const adminMenu = [
+const adminMenu: MenuItem[] = [
   { name: "Dashboard", path: "/dashboard" },
-  { name: "Logout", path: "/logout" },
+  { name: "Logout",logout:true },
 ];
 
-type Role = "user" | "admin" | null;
+export type Role = "user" | "admin" | null;
 
-export default function getMenu(role: Role, isLogin: boolean) {
+export default function getMenu(role: Role | null, isLogin: boolean) {
   if (!isLogin) {
     return [...menu_item, ...guestMenu];
   }

@@ -1,17 +1,35 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import getMenu from "./menu";
+import getMenu, { type MenuItem, type Role } from "./menu";
 import { FiShoppingCart } from "react-icons/fi";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { logout } from "../../redux/features/auth/authSlice";
+
+
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const numberOfCartItems = useAppSelector((state) => state.cart.cartItems.length);
-  console.log('length--->',numberOfCartItems);
-  const menu_items = getMenu("admin", true);
+  const dispatch = useAppDispatch();
+
+  const numberOfCartItems = useAppSelector(
+    (state) => state.cart.cartItems.length
+  );
+  const user = useAppSelector((state) => state.auth.user);
+  const role = (user?.role as Role) ?? null;
+  const isLogin = user !== null;
+
+  const menu_items = getMenu(role, isLogin);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    localStorage.removeItem("accessToken");
+    navigate("/login");
+  };
+
   return (
     <div>
       <div className="navbar bg-base-100 shadow-sm">
         <div className="navbar-start">
+          {/* Mobile Dropdown */}
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
               <svg
@@ -21,47 +39,79 @@ const Navbar = () => {
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                {" "}
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   strokeWidth="2"
                   d="M4 6h16M4 12h8m-8 6h16"
-                />{" "}
+                />
               </svg>
             </div>
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow text-5xl"
+              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow"
             >
-              {menu_items.map((item) => (
+              {menu_items.map((item: MenuItem) => (
                 <li key={item.name}>
-                  <NavLink to={item.path}>{item.name}</NavLink>
+                  {item.logout ? (
+                    <button
+                      onClick={handleLogout}
+                      className=""
+                    >
+                      {item.name}
+                    </button>
+                  ) : (
+                    <NavLink to={item.path ?? ""}>{item.name}</NavLink>
+                  )}
                 </li>
               ))}
             </ul>
           </div>
-          <a className="text-2xl font-bold">Campers Shop</a>
+          <NavLink to="/" className="text-2xl font-bold">
+            Campers Shop
+          </NavLink>
         </div>
-        <div className="navbar-center hidden lg:flex font-bold ">
+
+        {/* Desktop Menu */}
+        <div className="navbar-center hidden lg:flex font-bold">
           <ul className="menu menu-horizontal px-1">
-              {menu_items.map((item) => (
-                <li className="hover:bg-[#00A4EF] text-md " key={item.name}>
-                  <NavLink to={item.path}>{item.name}</NavLink>
-                </li>
-              ))}
+            {menu_items.map((item: MenuItem) => (
+              <li key={item.name}>
+                {item.logout ? (
+                  <button
+                    onClick={handleLogout}
+                    className=""
+                  >
+                    {item.name}
+                  </button>
+                ) : (
+                  <NavLink
+                    to={item.path ?? ""}
+                    className={({ isActive }) =>
+                      isActive ? "text-primary font-semibold" : ""
+                    }
+                  >
+                    {item.name}
+                  </NavLink>
+                )}
+              </li>
+            ))}
           </ul>
         </div>
+
+        {/* Cart */}
         <div className="navbar-end">
-          <div className="indicator cursor-pointer" onClick={() => navigate("/view-all-cart-items")}>
-            <p><FiShoppingCart  size={25}/></p>
-           {numberOfCartItems > 0 && (
-          <span className="badge badge-md indicator-item bg-primary text-white">
-            {numberOfCartItems}
-          </span>
-        )}
+          <div
+            className="indicator cursor-pointer mr-4"
+            onClick={() => navigate("/view-all-cart-items")}
+          >
+            <FiShoppingCart size={25} />
+            {numberOfCartItems > 0 && (
+              <span className="badge badge-md indicator-item bg-primary text-white">
+                {numberOfCartItems}
+              </span>
+            )}
           </div>
-          <a className="btn">Button</a>
         </div>
       </div>
     </div>

@@ -5,6 +5,8 @@ import  AllProducts from "../pages/Products/AllProducts";
 import ProductsByCategory from './../pages/Products/ProductsByCategory';
 import ProductDetails from "../pages/Products/ProductDetails";
 import CartPage from "../pages/Cart/CartPage";
+import LoginPage from "../pages/Login/LoginPage";
+import Checkout from "../pages/CheckOut/CheckOut";
 
 const routes = createBrowserRouter([
     {
@@ -30,6 +32,14 @@ const routes = createBrowserRouter([
             {
                 path:'/view-all-cart-items',
                 element:<CartPage/>
+            },
+            {
+                path:'/login',
+                element:<LoginPage/>
+            },
+            {
+                path:'/checkout',
+                element:<Checkout/>
             }
         ],
     },
