@@ -8,6 +8,8 @@ import { UserRoutes } from '../modules/users/users.routes';
 import { CategoryRoutes } from '../modules/category/category.route';
 import { ProductRoutes } from '../modules/products/products.routes';
 import { CartRoutes } from '../modules/cart/cart.route';
+import { AuthRoutes } from '../modules/auth/auth.route';
+import { OrderRoutes } from '../modules/orders/order.route';
 
 
 
@@ -29,6 +31,14 @@ const moduleRoutes = [
     {
         path: '/cart',
         route: CartRoutes
+    },
+    {
+        path: '/auth',
+        route: AuthRoutes
+    },
+    {
+        path: '/orders',
+        route: OrderRoutes
     }
 
 ]

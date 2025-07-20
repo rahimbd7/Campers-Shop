@@ -10,6 +10,7 @@ import UserModel from "../users/users.model";
 
 const loginUser = async (payload: IAuth) =>{
     //is the user is exists?
+    // console.log(payload);
     const user = await UserModel.isUserExists(payload?.email);
     if (!user) {
         throw new AppError(httpStatus.BAD_REQUEST, 'User is not found');
@@ -26,6 +27,7 @@ const loginUser = async (payload: IAuth) =>{
 
     //create jwt access token
     const jwtPayload = {
+        id: user?._id,
         email: user?.email,
         role: user?.role as string
     };
