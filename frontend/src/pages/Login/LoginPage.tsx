@@ -1,17 +1,18 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import InputField from "../../components/InputField";
 import { useLoginMutation } from "../../redux/features/auth/authApi";
 import { useAppDispatch } from "../../redux/hooks";
 import { setUser } from "../../redux/features/auth/authSlice";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import type { TUser } from "../../redux/features/auth/authSlice";
 import AuthLayout from "../../layout/AuthLayout";
 
 const LoginPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const [login, { isLoading, error }] = useLoginMutation();
 
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -34,9 +35,12 @@ const LoginPage = () => {
       // Save to Redux
       dispatch(setUser({ user: decodedUser, token }));
 
+      const from =
+        typeof location.state?.from === "string"
+          ? location.state.from
+          : location.state?.from?.pathname || "/";
 
-      // Redirect
-      navigate("/checkout"); // or home
+      navigate(from, { replace: true });
     } catch (err) {
       console.error("Login failed", err);
     }
@@ -63,9 +67,15 @@ const LoginPage = () => {
           placeholder="••••••••"
         />
         {error && (
-          <p className="text-red-500 text-sm text-center mt-2">Login failed. Please try again.</p>
+          <p className="text-red-500 text-sm text-center mt-2">
+            Login failed. Please try again.
+          </p>
         )}
-        <button type="submit" className="btn btn-primary w-full mt-2" disabled={isLoading}>
+        <button
+          type="submit"
+          className="btn btn-primary w-full mt-2"
+          disabled={isLoading}
+        >
           {isLoading ? "Logging in..." : "Login"}
         </button>
       </form>

@@ -3,7 +3,7 @@ import { baseApi } from "../../api/baseApi";
 
 export const orderApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    createOrder: builder.mutation({
+    placeOrder: builder.mutation({
       query: (orderData) => ({
         url: "/orders/create-order",
         method: "POST",
@@ -14,4 +14,4 @@ export const orderApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { useCreateOrderMutation } = orderApi;
+export const { usePlaceOrderMutation } = orderApi;

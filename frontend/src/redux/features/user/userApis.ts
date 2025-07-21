@@ -20,10 +20,12 @@ export const userApi = baseApi.injectEndpoints({
             }),
         }),
         updateUser: builder.mutation({
-            query: (user) => ({
-                url: `/users/update-user/${user.id}`,
-                method: "PATCH",
-                body: user,
+            query: ({id,...rest}) => ({
+                url: `/users/update-user/${id}`,
+                method: "PUT",
+                body: rest,
+                
+                
             }),
         }),
         deleteUser: builder.mutation({

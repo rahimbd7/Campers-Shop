@@ -1,66 +1,99 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useGetUserByIdQuery, useUpdateUserMutation } from "../../redux/features/user/userApis";
+import {
+  useGetUserByIdQuery,
+  useUpdateUserMutation,
+} from "../../redux/features/user/userApis";
 import { useGetAllProductsDetailsOfCartItemsQuery } from "../../redux/features/cart/cartApi";
-import { useCreateOrderMutation } from "../../redux/features/Order/orderApi";
+import { usePlaceOrderMutation } from "../../redux/features/Order/orderApi";
 
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import type { RootState } from "../../redux/store";
+import { useAppDispatch } from "../../redux/hooks";
+import { clearCart } from "../../redux/features/cart/cartSlice";
 
 const Checkout = () => {
   const { user } = useSelector((state: RootState) => state.auth);
   const { cartItems } = useSelector((state: RootState) => state.cart);
+  const dispatch = useAppDispatch();
 
   const [orderSuccess, setOrderSuccess] = useState(false);
-  const { data: res, isLoading: userLoading, isError: userError } = useGetUserByIdQuery(user?.id);
+  const {
+    data: res,
+    isLoading: userLoading,
+    isError: userError,
+  } = useGetUserByIdQuery(user?.id);
   const userData = res?.data || null;
+  // console.log(userData);
 
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [address, setAddress] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState(userData?.contactNo);
+
+  const [address, setAddress] = useState(userData?.address);
 
   const cartDataDetails = cartItems || [];
-  const {
-    data: { data: cartData } = { data: [] },
-    isLoading: cartLoading,
-  } = useGetAllProductsDetailsOfCartItemsQuery(cartDataDetails);
+  const { data: { data: cartData } = { data: [] }, isLoading: cartLoading } =
+    useGetAllProductsDetailsOfCartItemsQuery(cartDataDetails);
 
-  const [createOrder, { isLoading: isCreating }] = useCreateOrderMutation();
+  const [createOrder, { isLoading: isCreating }] = usePlaceOrderMutation();
   const [updateUser] = useUpdateUserMutation();
 
-  const totalAmount = cartData?.reduce((sum, item) => sum + item.price, 0);
+  const totalAmount = cartData?.reduce(
+    (sum: number, item: any) => sum + item.price,
+    0
+  );
 
   const handleCheckout = async () => {
     if (!userData) return toast.error("User not loaded");
+    console.log("address and phoneNumber", address, phoneNumber);
 
     // Update phone/address before placing order
+    const userPayload = {
+      id: userData._id,
+      address,
+      contactNo: phoneNumber,
+    };
+    console.log("userPayload", userPayload);
     try {
-      await updateUser({ id: userData._id, data: { address, phoneNumber } }).unwrap();
+      const result = await updateUser(userPayload);
+      console.log("result user update: ", result);
     } catch (err) {
-      toast.error("Failed to update user info");
+      toast.error("Failed to update user info", err);
       return;
     }
+    //const prepareCartItemsData for order
+    const cartItemsData = cartData.map((item) => ({
+      productId: item?._id,
+      quantity: item?.quantity,
+      priceAtOrderTime: item?.price,
+    }));
 
+    console.log("cartItemsData", cartItemsData);
     const orderPayload = {
       userId: userData._id,
-      userEmail: user?.email,
-      fullName: userData?.name,
-      address,
-      phoneNumber,
-      items: cartData,
+      items: cartItemsData,
       totalAmount,
+      paymentMethod: "cod",
+      deliveryAddress: address,
+      contactPhone: phoneNumber,
     };
 
     try {
+      console.log(orderPayload);
       await createOrder(orderPayload).unwrap();
+      dispatch(clearCart());
       setOrderSuccess(true);
       toast.success("Order placed successfully!");
     } catch (error) {
-      toast.error("Failed to place order");
+      const errMsg = error as { data: { message: string } };
+      toast.error(errMsg.data.message);
     }
+   
   };
 
-  if (userLoading) return <div className="text-center">Loading user data...</div>;
-  if (userError || !userData) return <div className="text-red-600">Failed to load user.</div>;
+  if (userLoading)
+    return <div className="text-center">Loading user data...</div>;
+  if (userError || !userData)
+    return <div className="text-red-600">Failed to load user.</div>;
 
   return (
     <div className="max-w-6xl mx-auto p-4 grid md:grid-cols-2 gap-6">
@@ -74,14 +107,14 @@ const Checkout = () => {
           </div>
           <div>
             <label className="font-semibold">Email:</label>
-            <p className="text-sm">{user?.email}</p>
+            <p className="text-sm">{userData?.email}</p>
           </div>
           <div>
             <label className="font-semibold">Phone Number:</label>
             <input
               type="text"
               className="input input-bordered w-full"
-              value={phoneNumber || userData.phoneNumber}
+              value={phoneNumber || userData.contactNo}
               onChange={(e) => setPhoneNumber(e.target.value)}
             />
           </div>
@@ -120,11 +153,10 @@ const Checkout = () => {
 
         {orderSuccess && (
           <p className="mt-4 text-green-600 font-medium text-center">
-            🎉 Order placed successfully!
+            Order placed successfully!
           </p>
         )}
       </div>
-      
     </div>
   );
 };
