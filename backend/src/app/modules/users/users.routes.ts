@@ -11,7 +11,7 @@ const userRouter = express.Router();
 userRouter.post('/create-user',validateRequest(UserValidation.createUserZodSchema),UserController.createUser);
 userRouter.get('/get-all-user',UserController.getAllUsers);
 userRouter.get('/get-user/:id',UserController.getUserById);
-userRouter.patch('/update-user/:id',validateRequest(UserValidation.updateUserZodSchema),UserController.updateUser);
+userRouter.put('/update-user/:id',validateRequest(UserValidation.updateUserZodSchema),UserController.updateUser);
 userRouter.delete('/delete-user/:id',UserController.deleteUser);
 
 export const UserRoutes = userRouter

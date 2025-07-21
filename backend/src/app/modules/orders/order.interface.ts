@@ -10,7 +10,7 @@ export interface IOrder {
   userId: Types.ObjectId;
   items: IOrderItem[];
   totalAmount: number;
-  paymentMethod: "bkash" | "stripe";
+  paymentMethod: "bkash" | "stripe" | "cod";
   deliveryAddress: string;
   contactPhone: string;
   status?: "pending" | "confirmed" | "shipped" | "delivered";

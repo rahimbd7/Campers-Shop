@@ -34,11 +34,11 @@ const createOrderIntoDB = async (payload: IOrder) => {
     const order = await OrderModel.create([payload], { session });
 
     // Optional: Clear cart after order
-    await CartModel.findOneAndUpdate(
-      { userId: payload.userId },
-      { $set: { items: [] } },
-      { session }
-    );
+    // await CartModel.findOneAndUpdate(
+    //   { userId: payload.userId },
+    //   { $set: { items: [] } },
+    //   { session }
+    // );
 
     await session.commitTransaction();
     session.endSession();

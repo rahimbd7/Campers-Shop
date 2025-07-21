@@ -13,7 +13,7 @@ const orderSchema = new Schema<IOrder>(
       },
     ],
     totalAmount: { type: Number, required: true },
-    paymentMethod: { type: String, enum: ["cod", "stripe"], required: true },
+    paymentMethod: { type: String, enum: ["cod", "stripe", "bkash"], required: true },
     deliveryAddress: { type: String, required: true },
     contactPhone: { type: String, required: true },
     status: {
