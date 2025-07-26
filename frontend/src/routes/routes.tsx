@@ -1,48 +1,35 @@
 import { createBrowserRouter } from "react-router-dom";
-import MainLayout from './../layout/MainLayout';
-import  Home from "../pages/Home/Home";
-import  AllProducts from "../pages/Products/AllProducts";
-import ProductsByCategory from './../pages/Products/ProductsByCategory';
-import ProductDetails from "../pages/Products/ProductDetails";
-import CartPage from "../pages/Cart/CartPage";
-import LoginPage from "../pages/Login/LoginPage";
-import Checkout from "../pages/CheckOut/CheckOut";
-import ProtectedRoute from "../ProtectedRoute/ProtechtedRoute";
+import MainLayout from "./../layout/MainLayout";
+
+
+import { publicRoutes } from "./publicRoutes";
+import { withRoleProtection } from "../utils/RoutesUtils/withRoleProtection";
+import { adminRoutes } from "./adminRoutes";
+import { userRoutes } from "./userRoutes";
+import DashboardLayout from "../pages/Dashboard/Dashboard Layout/DashboardLayout";
+import Dashboard from "../pages/Dashboard/Dashboard";
+import  ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
+
 
 const routes = createBrowserRouter([
-    {
-        path: "/",
-        element: <MainLayout/>,
-        children: [
-            {
-                path: "/",
-                element: <Home/>,
-            },
-            {
-                path: "/products",
-                element:<AllProducts/>,
-            },
-            {
-                path: "/products_by_category/:id",
-                element:<ProductsByCategory/>,
-            },
-            {
-                path:'/product/:productId',
-                element:<ProductDetails/>
-            },
-            {
-                path:'/view-all-cart-items',
-                element:<CartPage/>
-            },
-            {
-                path:'/login',
-                element:<LoginPage/>
-            },
-            {
-                path:'/checkout',
-                element:<ProtectedRoute><Checkout/></ProtectedRoute>
-            }
-        ],
-    },
+  {
+    path: "/",
+    element: <MainLayout />,
+    children: publicRoutes
+  },
+  {
+    path: "/dashboard",
+    element: <ProtectedRoute><DashboardLayout /></ProtectedRoute>,
+    children:[
+       {
+        index : true,
+        path: "",
+        element: <Dashboard />,
+      },
+      ...withRoleProtection(userRoutes,["user"]),
+      ...withRoleProtection(adminRoutes,["admin"]),
+    ]
+  },
+  
 ]);
 export default routes;

@@ -1,0 +1,174 @@
+import { useState } from "react";
+import {
+  confirmAction,
+  notifySuccess,
+  notifyError,
+} from "../../../../utils/Notification/alertUtils";
+import {
+  useGetAllUsersQuery,
+  useDeleteUserMutation,
+  useUpdateUserMutation,
+  // useUpdateUserMutation,
+} from "../../../../redux/features/user/userApis";
+import DynamicModal from "../../Dashboard Components/DynamicModal";
+import { generateFieldsFromObject } from "../../../../utils/DashboardUtils/generateFieldsFromObject";
+
+const ManageUsers = () => {
+  const { data: users } = useGetAllUsersQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
+  const [deleteUser] = useDeleteUserMutation();
+  const [updateUser] = useUpdateUserMutation();
+
+  const [showModal, setShowModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  /** ✅ Default user structure for create mode */
+  const defaultUser = {
+    name: "",
+    email: "",
+    password: "",
+    role: "user",
+    contactNo: "",
+    address: "",
+    isDeleted: false,
+  };
+
+  /** ✅ Field overrides */
+  const overrides = {
+    role: {
+      type: "select",
+      options: ["admin", "user"],
+    },
+    password: {
+      placeholder: "Enter new password",
+    },
+    isDeleted: {
+      type: "checkbox",
+    },
+  };
+
+  /** ✅ Generate fields dynamically */
+  const fields = generateFieldsFromObject(
+    isEditMode ? selectedUser : defaultUser,
+    ["_id", "__v", "createdAt", "updatedAt"],
+    overrides
+  );
+
+  /** ✅ DELETE USER */
+  const handleDelete = async (id: string) => {
+    const confirmed = await confirmAction(
+      "Delete User?",
+      "This action cannot be undone.",
+      "Delete"
+    );
+
+    if (confirmed) {
+      try {
+        await deleteUser(id).unwrap();
+        notifySuccess("User deleted successfully!");
+      } catch (error) {
+        notifyError("Failed to delete user. Please try again.");
+      }
+    }
+  };
+
+  /** ✅ Handle modal submit (supports FormData) */
+  const handleSubmit = async (formData: FormData) => {
+    const userFormData = Object.fromEntries(formData) as any;
+    try {
+      if (isEditMode) {
+        const result =await updateUser({ id: selectedUser._id as string,  ...userFormData }).unwrap();
+        console.log(result);
+        console.log("Updating user:", Object.fromEntries(formData));
+        notifySuccess("User updated successfully!");
+      } else {
+        console.log("Creating user:", Object.fromEntries(formData));
+        // await createUser(formData);
+        notifySuccess("User created successfully!");
+      }
+    } catch (error) {
+      notifyError(isEditMode ? "Failed to update user!" : "Failed to create user!");
+    }
+  };
+
+  return (
+    <div className="p-6 bg-base-100 shadow-lg rounded-lg">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold text-primary">Manage Users</h2>
+        <button
+          className="btn btn-primary"
+          onClick={() => {
+            setSelectedUser(null);
+            setIsEditMode(false);
+            setShowModal(true);
+          }}
+        >
+          + Add User
+        </button>
+      </div>
+
+      <div className="overflow-x-auto">
+        <table className="table table-zebra w-full">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th className="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users?.data?.map((user: any) => (
+              <tr key={user._id}>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+                <td>
+                  <span
+                    className={`badge ${
+                      user.role === "admin" ? "badge-primary" : "badge-secondary"
+                    }`}
+                  >
+                    {user.role}
+                  </span>
+                </td>
+                <td className="text-center flex gap-2 justify-center">
+                  <button
+                    className="btn btn-primary btn-xs"
+                    onClick={() => {
+                      setSelectedUser(user);
+                      setIsEditMode(true);
+                      setShowModal(true);
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="btn btn-error btn-xs"
+                    onClick={() => handleDelete(user._id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* ✅ Dynamic Modal */}
+      {showModal && (
+        <DynamicModal
+          title={isEditMode ? "Update User" : "Create User"}
+          isEditMode={isEditMode}
+          fields={fields}
+          onSubmit={handleSubmit}
+          closeModal={() => setShowModal(false)}
+        />
+      )}
+    </div>
+  );
+};
+
+export default ManageUsers;

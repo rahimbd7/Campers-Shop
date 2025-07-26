@@ -1,16 +1,4 @@
-// menu.ts
-
-import { logout } from "../../redux/features/auth/authSlice";
-
-export type MenuItem = {
-  name: string;
-  path?: string;
-  logout?: boolean;
-};
-
-
-
-
+import type { MenuItem, Role } from "../../interface/common";
 const menu_item: MenuItem[] = [
   { name: "Home", path: "/" },
   { name: "Product", path: "/products" },
@@ -32,7 +20,10 @@ const adminMenu: MenuItem[] = [
   { name: "Logout",logout:true },
 ];
 
-export type Role = "user" | "admin" | null;
+
+
+
+
 
 export default function getMenu(role: Role | null, isLogin: boolean) {
   if (!isLogin) {
