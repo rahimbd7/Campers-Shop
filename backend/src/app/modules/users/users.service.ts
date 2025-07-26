@@ -13,7 +13,7 @@ const createUserIntoDB = async (user: IUser, next: NextFunction) => {
    
 }
 const getAllUsersFromDB = async () => {
-    const result = await UserModel.find({}, { password: 0, createdAt: 0, updatedAt: 0 });
+    const result = await UserModel.find({ isDeleted: false }, { password: 0, createdAt: 0, updatedAt: 0 });
     return result
  }
 const getUserByIdFromDB = async (id: string) => {
@@ -21,6 +21,7 @@ const getUserByIdFromDB = async (id: string) => {
     return result
  }
 const updateUserIntoDB = async (id: string, payload: IUser) => { 
+    console.log(payload);
     const result =  await UserModel.findOneAndUpdate({ _id: id }, payload, { new: true });
     return result
 }

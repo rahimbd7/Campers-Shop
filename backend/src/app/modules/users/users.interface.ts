@@ -1,5 +1,4 @@
 import { Model } from 'mongoose';
-import UserModel from './users.model';
 export interface IUser {
     _id: any;
     name: string;

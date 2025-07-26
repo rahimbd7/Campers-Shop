@@ -26,7 +26,7 @@ const updateUserZodSchema = z.object({
     role: z.string().optional(),
     contactNo: z.string().optional(),
     address: z.string().optional(),
-    isDeleted: z.boolean().optional(),
+    isDeleted: z.coerce.boolean().optional(),
   }),
 });
 
