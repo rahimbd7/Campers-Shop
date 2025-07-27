@@ -42,7 +42,7 @@ const getUserById = catchAsync(async (req, res) => {
 const updateUser = catchAsync(async (req, res) => {
     const { id } = req.params;
     const payload = req.body;
-    const result = await UserService.updateUserIntoDB(id, payload);
+    const result = await UserService.updateUserIntoDB(req.file,id, payload);
     sendResponse(res, {
         statusCode: httpStatus.OK,
         success: true,

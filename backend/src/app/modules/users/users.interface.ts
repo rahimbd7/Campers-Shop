@@ -8,6 +8,7 @@ export interface IUser {
     contactNo: string;
     address?: string;
     isDeleted?: boolean
+    profile_img?: string
 }
 
 export interface IUserService extends Model<IUser> {

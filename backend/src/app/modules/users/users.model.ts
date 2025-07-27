@@ -13,6 +13,7 @@ const userSchema = new Schema<IUser, IUserService>({
   contactNo: { type: String, required: true },
   address: { type: String },
   isDeleted: { type: Boolean, default: false },
+  profile_img: { type: String },
 }, {
   timestamps: true
 });

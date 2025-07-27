@@ -3,6 +3,7 @@ import { IUser } from "./users.interface"
 import UserModel from "./users.model";
 import httpStatus from 'http-status';
 import AppError from "../../errors/AppError";
+import uploadImageToCloudinary from "../../utils/FileUploader/uploadImageToCloudinary";
 
 const createUserIntoDB = async (user: IUser, next: NextFunction) => {
     
@@ -20,8 +21,13 @@ const getUserByIdFromDB = async (id: string) => {
     const result = await UserModel.findById(id);
     return result
  }
-const updateUserIntoDB = async (id: string, payload: IUser) => { 
-    console.log(payload);
+const updateUserIntoDB = async (file:any,id: string, payload: IUser) => { 
+    const {path} = file;
+    if(path){
+        const filename =  `${payload?.email}`;
+        const {secure_url} = await uploadImageToCloudinary(filename, path);
+        payload.profile_img = secure_url as string;
+    }
     const result =  await UserModel.findOneAndUpdate({ _id: id }, payload, { new: true });
     return result
 }
