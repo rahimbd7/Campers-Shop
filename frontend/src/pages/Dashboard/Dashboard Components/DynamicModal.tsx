@@ -13,7 +13,7 @@ export interface Field {
 interface DynamicModalProps {
   title: string;
   fields: Field[];
-  onSubmit: (formData: FormData) => void; // ✅ FormData for image upload
+  onSubmit: (formData: FormData) => void; // ✅ FormData for API
   closeModal: () => void;
   isEditMode?: boolean;
 }
@@ -27,7 +27,10 @@ const DynamicModal: React.FC<DynamicModalProps> = ({
 }) => {
   const [formData, setFormData] = useState<Record<string, any>>(
     fields.reduce((acc, field) => {
-      acc[field.name] = field.defaultValue || (field.type === "checkbox" ? false : "");
+      acc[field.name] =
+        field.type === "file"
+          ? field.defaultValue || ""
+          : field.defaultValue || (field.type === "checkbox" ? false : "");
       return acc;
     }, {} as Record<string, any>)
   );
@@ -42,18 +45,20 @@ const DynamicModal: React.FC<DynamicModalProps> = ({
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, files } = e.target;
-    setFormData({
-      ...formData,
-      [name]: files ? Array.from(files) : [],
-    });
+    if (files && files.length > 0) {
+      setFormData({
+        ...formData,
+        [name]: files[0], // ✅ Only first file for profile image
+      });
+    }
   };
 
   /** ✅ Convert to FormData for API submission */
   const handleSubmit = () => {
     const dataToSend = new FormData();
     Object.keys(formData).forEach((key) => {
-      if (Array.isArray(formData[key])) {
-        formData[key].forEach((file: File) => dataToSend.append(key, file));
+      if (formData[key] instanceof File) {
+        dataToSend.append(key, formData[key]);
       } else {
         dataToSend.append(key, formData[key]);
       }
@@ -76,17 +81,17 @@ const DynamicModal: React.FC<DynamicModalProps> = ({
               </label>
 
               {field.type === "checkbox" ? (
-  <div className="flex items-center gap-2">
-    <input
-      type="checkbox"
-      name={field.name}
-      checked={formData[field.name]} // ✅ Checkbox uses checked, not value
-      onChange={handleChange}
-      className="toggle toggle-primary"
-    />
-    <span>{field.label}</span>
-  </div>
-) :field.type === "select" ? (
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    name={field.name}
+                    checked={formData[field.name]}
+                    onChange={handleChange}
+                    className="toggle toggle-primary"
+                  />
+                  <span>{field.label}</span>
+                </div>
+              ) : field.type === "select" ? (
                 <select
                   name={field.name}
                   value={formData[field.name]}
@@ -101,13 +106,25 @@ const DynamicModal: React.FC<DynamicModalProps> = ({
                   ))}
                 </select>
               ) : field.type === "file" ? (
-                <input
-                  type="file"
-                  name={field.name}
-                  multiple
-                  onChange={handleFileChange}
-                  className="file-input file-input-bordered w-full"
-                />
+                <>
+                  {isEditMode &&
+                    formData[field.name] &&
+                    typeof formData[field.name] === "string" && (
+                      <div className="mb-2">
+                        <img
+                          src={formData[field.name]}
+                          alt="Profile"
+                          className="w-20 h-20 rounded-full object-cover"
+                        />
+                      </div>
+                    )}
+                  <input
+                    type="file"
+                    name={field.name}
+                    onChange={handleFileChange}
+                    className="file-input file-input-bordered w-full"
+                  />
+                </>
               ) : (
                 <input
                   type={field.type}

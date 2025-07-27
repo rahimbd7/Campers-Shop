@@ -8,7 +8,6 @@ import {
   useGetAllUsersQuery,
   useDeleteUserMutation,
   useUpdateUserMutation,
-  // useUpdateUserMutation,
 } from "../../../../redux/features/user/userApis";
 import DynamicModal from "../../Dashboard Components/DynamicModal";
 import { generateFieldsFromObject } from "../../../../utils/DashboardUtils/generateFieldsFromObject";
@@ -33,6 +32,7 @@ const ManageUsers = () => {
     contactNo: "",
     address: "",
     isDeleted: false,
+    profile_img: "", // ✅ Added profile image field
   };
 
   /** ✅ Field overrides */
@@ -47,16 +47,23 @@ const ManageUsers = () => {
     isDeleted: {
       type: "checkbox",
     },
+    profile_img: {
+      type: "file",
+      label: "Profile Image",
+    },
   };
 
-  /** ✅ Generate fields dynamically */
-  const fields = generateFieldsFromObject(
-    isEditMode ? selectedUser : defaultUser,
+  /** ✅ Merge defaultUser with selectedUser for edit mode */
+  const baseUserData = { ...defaultUser, ...(isEditMode ? selectedUser : {}) };
+
+  /** ✅ Generate fields */
+ const fields = generateFieldsFromObject(
+    baseUserData,
     ["_id", "__v", "createdAt", "updatedAt"],
     overrides
   );
 
-  /** ✅ DELETE USER */
+  /** ✅ Handle DELETE */
   const handleDelete = async (id: string) => {
     const confirmed = await confirmAction(
       "Delete User?",
@@ -74,18 +81,14 @@ const ManageUsers = () => {
     }
   };
 
-  /** ✅ Handle modal submit (supports FormData) */
+  /** ✅ Handle modal submit (FormData) */
   const handleSubmit = async (formData: FormData) => {
-    const userFormData = Object.fromEntries(formData) as any;
     try {
       if (isEditMode) {
-        const result =await updateUser({ id: selectedUser._id as string,  ...userFormData }).unwrap();
-        console.log(result);
-        console.log("Updating user:", Object.fromEntries(formData));
+        await updateUser({ id: selectedUser._id as string, formData }).unwrap();
         notifySuccess("User updated successfully!");
       } else {
         console.log("Creating user:", Object.fromEntries(formData));
-        // await createUser(formData);
         notifySuccess("User created successfully!");
       }
     } catch (error) {
@@ -113,6 +116,7 @@ const ManageUsers = () => {
         <table className="table table-zebra w-full">
           <thead>
             <tr>
+              <th>Profile</th>
               <th>Name</th>
               <th>Email</th>
               <th>Role</th>
@@ -122,6 +126,17 @@ const ManageUsers = () => {
           <tbody>
             {users?.data?.map((user: any) => (
               <tr key={user._id}>
+                <td>
+                  {user.profile_img ? (
+                    <img
+                      src={user?.profile_img}
+                      alt="Profile"
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
+                  ) : (
+                    <span>No Image</span>
+                  )}
+                </td>
                 <td>{user.name}</td>
                 <td>{user.email}</td>
                 <td>
