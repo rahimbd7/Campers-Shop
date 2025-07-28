@@ -8,6 +8,7 @@ import {
   useGetAllUsersQuery,
   useDeleteUserMutation,
   useUpdateUserMutation,
+  useCreateUserMutation,
 } from "../../../../redux/features/user/userApis";
 import DynamicModal from "../../Dashboard Components/DynamicModal";
 import { generateFieldsFromObject } from "../../../../utils/DashboardUtils/generateFieldsFromObject";
@@ -18,6 +19,7 @@ const ManageUsers = () => {
   });
   const [deleteUser] = useDeleteUserMutation();
   const [updateUser] = useUpdateUserMutation();
+  const [createUser] = useCreateUserMutation();
 
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any>(null);
@@ -89,6 +91,7 @@ const ManageUsers = () => {
         notifySuccess("User updated successfully!");
       } else {
         console.log("Creating user:", Object.fromEntries(formData));
+        await createUser(formData).unwrap();
         notifySuccess("User created successfully!");
       }
     } catch (error) {
