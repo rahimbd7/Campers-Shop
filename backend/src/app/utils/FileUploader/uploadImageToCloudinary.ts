@@ -2,13 +2,14 @@
 /* eslint-disable no-unused-vars */
 import { v2 as cloudinary } from 'cloudinary';
 import fs from 'fs';
+import config from '../../config';
 
 const uploadImageToCloudinary = async (filename: string, path: string): Promise<Record<string, unknown>> => {
      // Configuration
      cloudinary.config({ 
-        cloud_name: 'dqhf9ljat', 
-        api_key: '638569423378198', 
-        api_secret: 'sjadm1fcii1NvKrmzFW9494KhLY' // Click 'View API Keys' above to copy your API secret
+        cloud_name: config.cloudinary_name as string, 
+        api_key: config.cloudinary_api_key as string,
+        api_secret: config.cloudinary_api_secret as string, // Click 'View API Keys' above to copy your API secret
     });
     
     // Upload an image

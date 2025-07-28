@@ -5,8 +5,13 @@ import httpStatus from 'http-status';
 import AppError from "../../errors/AppError";
 import uploadImageToCloudinary from "../../utils/FileUploader/uploadImageToCloudinary";
 
-const createUserIntoDB = async (user: IUser, next: NextFunction) => {
-    
+const createUserIntoDB = async (file:any,user: IUser, next: NextFunction) => {
+    const {path} = file;
+    if(path){
+        const filename =  `${user?.email}`;
+        const {secure_url} = await uploadImageToCloudinary(filename, path);
+        user.profile_img = secure_url as string;
+    }
         const result = await UserModel.create(user);
         if (!result)
             throw new AppError(httpStatus.BAD_REQUEST, 'User is not created')
