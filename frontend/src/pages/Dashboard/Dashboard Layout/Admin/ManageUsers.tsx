@@ -10,7 +10,7 @@ import {
   useUpdateUserMutation,
   useCreateUserMutation,
 } from "../../../../redux/features/user/userApis";
-import DynamicModal from "../../Dashboard Components/DynamicModal";
+import DynamicModalForUserManagement from "../../Dashboard Components/DynamicModalForUserManagement";
 import { generateFieldsFromObject } from "../../../../utils/DashboardUtils/generateFieldsFromObject";
 
 const ManageUsers = () => {
@@ -59,7 +59,7 @@ const ManageUsers = () => {
   const baseUserData = { ...defaultUser, ...(isEditMode ? selectedUser : {}) };
 
   /** ✅ Generate fields */
- const fields = generateFieldsFromObject(
+  const fields = generateFieldsFromObject(
     baseUserData,
     ["_id", "__v", "createdAt", "updatedAt"],
     overrides
@@ -95,7 +95,9 @@ const ManageUsers = () => {
         notifySuccess("User created successfully!");
       }
     } catch (error) {
-      notifyError(isEditMode ? "Failed to update user!" : "Failed to create user!");
+      notifyError(
+        isEditMode ? "Failed to update user!" : "Failed to create user!"
+      );
     }
   };
 
@@ -145,7 +147,9 @@ const ManageUsers = () => {
                 <td>
                   <span
                     className={`badge ${
-                      user.role === "admin" ? "badge-primary" : "badge-secondary"
+                      user.role === "admin"
+                        ? "badge-primary"
+                        : "badge-secondary"
                     }`}
                   >
                     {user.role}
@@ -177,7 +181,7 @@ const ManageUsers = () => {
 
       {/* ✅ Dynamic Modal */}
       {showModal && (
-        <DynamicModal
+        <DynamicModalForUserManagement
           title={isEditMode ? "Update User" : "Create User"}
           isEditMode={isEditMode}
           fields={fields}

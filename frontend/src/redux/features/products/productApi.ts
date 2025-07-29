@@ -4,6 +4,32 @@ import { setProducts, setCategoryWiseProducts, setProductById } from "./productS
 
 export const productApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    createProduct: builder.mutation<IProduct, FormData>({
+      query: (formData) => ({
+        url: "/products/create-product",
+        method: "POST",
+        body: formData,
+      }),
+      invalidatesTags: ["Product"],
+    }),
+
+    updateProduct: builder.mutation<IProduct, { id: string; formData: FormData }>({
+      query: ({ id, formData }) => ({
+        url: `/products/update-product/${id}`,
+        method: "PATCH",
+        body: formData,
+      }),
+      invalidatesTags: ["Product"],
+    }),
+
+    deleteProduct: builder.mutation<IProduct, string>({
+      query: (id) => ({
+        url: `/products/delete-product/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Product"],
+    }),
+
     getAllProducts: builder.query<IProduct[], void>({
       query: () => ({
         url: "/products/get-all-products",
@@ -49,10 +75,14 @@ export const productApi = baseApi.injectEndpoints({
       }
     }),
   }),
+
 });
 
 export const {
   useGetAllProductsQuery,
   useGetProductByIdQuery,
   useGetProductByCategoryQuery,
+  useCreateProductMutation,
+  useUpdateProductMutation,
+  useDeleteProductMutation
 } = productApi;

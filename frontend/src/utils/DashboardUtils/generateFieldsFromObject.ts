@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // utils/generateFieldsFromObject.ts
 
-import type { Field } from "../../pages/Dashboard/Dashboard Components/DynamicModal";
+import type { Field } from "../../pages/Dashboard/Dashboard Components/DynamicModalForUserManagement";
 
 
 const DEFAULT_EXCLUDE = ["_id", "__v", "createdAt", "updatedAt"];

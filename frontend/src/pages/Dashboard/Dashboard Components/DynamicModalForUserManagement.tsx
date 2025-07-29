@@ -4,7 +4,14 @@ import React, { useState } from "react";
 export interface Field {
   name: string;
   label: string;
-  type: "text" | "number" | "email" | "password" | "file" | "select" | "checkbox";
+  type:
+    | "text"
+    | "number"
+    | "email"
+    | "password"
+    | "file"
+    | "select"
+    | "checkbox";
   placeholder?: string;
   options?: string[]; // For select fields
   defaultValue?: any;
@@ -18,7 +25,7 @@ interface DynamicModalProps {
   isEditMode?: boolean;
 }
 
-const DynamicModal: React.FC<DynamicModalProps> = ({
+const DynamicModalForUserManagement: React.FC<DynamicModalProps> = ({
   title,
   fields,
   onSubmit,
@@ -35,7 +42,9 @@ const DynamicModal: React.FC<DynamicModalProps> = ({
     }, {} as Record<string, any>)
   );
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
@@ -152,4 +161,4 @@ const DynamicModal: React.FC<DynamicModalProps> = ({
   );
 };
 
-export default DynamicModal;
+export default DynamicModalForUserManagement;
