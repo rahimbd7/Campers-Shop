@@ -1,13 +1,19 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import { ProductController } from "./products.controller";
 import validateRequest from "../../middlewares/validateRequest";
 import { ProductValidation } from "./products.validate";
+import { upload } from "../../utils/FileUploader/fileUploadByMulter";
 
 
 const productRouter = express.Router();
 
 productRouter.post(
-  "/create-product",
+  "/create-product",upload.array("images"),(req:Request,res:Response,next:NextFunction)=>{
+    if (req.body.data) {
+      req.body = JSON.parse(req.body.data);
+    } 
+    next();
+  },
   validateRequest(ProductValidation.createProductZodSchema),
   ProductController.createProduct
 );
@@ -17,6 +23,13 @@ productRouter.get("/category/:categoryId", ProductController.getProductByCategor
 productRouter.get("/get-product/:id", ProductController.getProductById);
 productRouter.patch(
   "/update-product/:id",
+  upload.array("images"),
+  (req:Request,res:Response,next:NextFunction) => {
+    if (req.body.data) {
+      req.body = JSON.parse(req.body.data);
+    }
+    next();
+  },
   validateRequest(ProductValidation.updateProductZodSchema),
   ProductController.updateProduct
 );

@@ -1,8 +1,34 @@
 import ProductModel from './products.model';
 import { IProduct } from './products.interface';
+import uploadImageToCloudinary, { deleteImageFromCloudinary } from '../../utils/FileUploader/uploadImageToCloudinary';
 
- const createProductIntoDB = async (payload: IProduct) => {
-  return await ProductModel.create(payload);
+const createProductIntoDB = async (
+  payload: Omit<IProduct, "images">,
+  files: Express.Multer.File[]
+) => {
+  let imageUrls: string[] = [];
+
+  // ✅ Handle image upload if files exist
+  if (files && files.length > 0) {
+    const uploadPromises = files.map(async (file) => {
+      const filename = `${Date.now()}-${file.originalname}`;
+      const { secure_url } = (await uploadImageToCloudinary(filename, file.path)) as {
+        secure_url: string;
+      };
+      return secure_url;
+    });
+
+    imageUrls = await Promise.all(uploadPromises);
+  }
+
+  // ✅ Merge payload with uploaded image URLs
+  const productData = {
+    ...payload,
+    images: imageUrls,
+  };
+
+  const createdProduct = await ProductModel.create(productData);
+  return createdProduct;
 };
 
 const getAllProductsFromDB = async (filters: any) => {
@@ -53,8 +79,45 @@ const getAllProductsFromDB = async (filters: any) => {
   return await ProductModel.findById(id);
 };
 
- const updateProductIntoDB = async (id: string, payload: Partial<IProduct>) => {
-  return await ProductModel.findByIdAndUpdate(id, payload, { new: true });
+const updateProductIntoDB = async (
+  id: string,
+  payload: Partial<IProduct> & { removedOldImages?: string[] },
+  files: Express.Multer.File[]
+) => {
+  const product = await ProductModel.findById(id);
+  if (!product) {
+    throw new Error("Product not found");
+  }
+
+  // ✅ Remove old images if requested
+  if (payload.removedOldImages && payload.removedOldImages.length > 0) {
+    for (const imgUrl of payload.removedOldImages) {
+      await deleteImageFromCloudinary(imgUrl);
+    }
+
+    product.images = product.images.filter(
+      (img) => !payload.removedOldImages?.includes(img)
+    );
+  }
+
+  // ✅ Upload new images
+  if (files && files.length > 0) {
+    const uploadPromises = files.map(async (file) => {
+      const filename = `${Date.now()}-${file.originalname}`;
+      const { secure_url } = await uploadImageToCloudinary(filename, file.path);
+      return secure_url;
+    });
+
+    const newImageUrls: string[] = await Promise.all(uploadPromises) as string[];
+    product.images.push(...newImageUrls);
+  }
+
+  // ✅ Update other fields (except removedOldImages)
+  const { removedOldImages, ...restPayload } = payload;
+  Object.assign(product, restPayload);
+
+  await product.save();
+  return product;
 };
 
  const deleteProductByIdFromDB = async (id: string) => {

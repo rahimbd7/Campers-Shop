@@ -5,7 +5,9 @@ import sendResponse from '../../../shared/sendResponse';
 import httpStatus from 'http-status';
 
 const createProduct = catchAsync(async (req: Request, res: Response) => {
-    const result = await ProductService.createProductIntoDB(req.body);
+    const payload = req.body;
+    const files = req.files as Express.Multer.File[];
+    const result = await ProductService.createProductIntoDB(payload, files);
     if (result) {
         sendResponse(res, {
             statusCode: httpStatus.OK,
@@ -49,15 +51,18 @@ const getProductById = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateProduct = catchAsync(async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const payload = req.body;
-    const result = await ProductService.updateProductIntoDB(id, payload);
-    sendResponse(res, {
-        statusCode: httpStatus.OK,
-        success: true,
-        message: 'Product updated successfully',
-        data: result
-    });
+  const { id } = req.params;
+  const payload = req.body;
+  const files = req.files as Express.Multer.File[];
+
+  const result = await ProductService.updateProductIntoDB(id, payload, files);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Product updated successfully",
+    data: result,
+  });
 });
 
 const deleteProduct = catchAsync(async (req: Request, res: Response) => {

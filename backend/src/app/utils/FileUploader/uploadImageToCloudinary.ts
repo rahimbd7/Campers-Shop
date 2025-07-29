@@ -51,4 +51,18 @@ const uploadImageToCloudinary = async (filename: string, path: string): Promise<
     // console.log(autoCropUrl);    
 };
 
+
+
+export const deleteImageFromCloudinary = async (imageUrl: string) => {
+  // ✅ Extract public_id from image URL
+  const parts = imageUrl.split("/");
+  const publicIdWithExt = parts[parts.length - 1];
+  const publicId = publicIdWithExt.split(".")[0];
+
+  try {
+    await cloudinary.uploader.destroy(publicId);
+  } catch (error) {
+    console.error("Failed to delete image from Cloudinary:", error);
+  }
+};
 export default uploadImageToCloudinary
