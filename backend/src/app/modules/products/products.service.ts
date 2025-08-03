@@ -8,7 +8,7 @@ const createProductIntoDB = async (
 ) => {
   let imageUrls: string[] = [];
 
-  // ✅ Handle image upload if files exist
+  // Handle image upload if files exist
   if (files && files.length > 0) {
     const uploadPromises = files.map(async (file) => {
       const filename = `${Date.now()}-${file.originalname}`;
@@ -21,7 +21,7 @@ const createProductIntoDB = async (
     imageUrls = await Promise.all(uploadPromises);
   }
 
-  // ✅ Merge payload with uploaded image URLs
+  //  Merge payload with uploaded image URLs
   const productData = {
     ...payload,
     images: imageUrls,

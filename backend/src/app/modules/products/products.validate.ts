@@ -19,6 +19,7 @@ const createProductZodSchema = z.object({
   }),
 });
 
+
 const updateProductZodSchema = z.object({
   body: z.object({
     name: z.string().optional(),

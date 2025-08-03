@@ -19,23 +19,34 @@ const createUserZodSchema = z.object({
   }),
 });
 
+
+// Helper function to convert empty string to undefined
+const optionalString = () =>
+  z.string().optional().transform((val) => (val === "" ? undefined : val));
+
+
 const updateUserZodSchema = z.object({
   body: z.object({
-    name: z.string().optional(),
-    email: z.string().email('Invalid email format').optional(),
-    password: z
-      .string()
-      .optional()
-      .transform((val) => (val === '' ? undefined : val))
+    name: optionalString(),
+    email: optionalString(),
+    password: optionalString()
       .refine((val) => !val || val.length >= 6, {
-        message: 'Password must be at least 6 characters',
+        message: "Password must be at least 6 characters",
       }),
-    role: z.string().optional(),
-    contactNo: z.string().optional(),
-    address: z.string().optional(),
-    isDeleted: z.coerce.boolean().optional(),
+    role: optionalString(),
+    contactNo: optionalString(),
+    address: optionalString(),
+    isDeleted: z.union([z.string(), z.boolean()])
+      .optional()
+      .transform((val) => {
+        if (val === "" || val === undefined) return undefined;
+        if (val === "true") return true;
+        if (val === "false") return false;
+        return val;
+      }),
   }),
 });
+
 
 
 

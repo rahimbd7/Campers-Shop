@@ -4,6 +4,7 @@ import validateRequest from './../../middlewares/validateRequest';
 import { UserValidation } from "./users.validate";
 import { upload } from "../../utils/FileUploader/fileUploadByMulter";
 import { validateImageFile } from "../../middlewares/validateImageFile";
+import { json } from "stream/consumers";
 
 
 
@@ -11,16 +12,28 @@ import { validateImageFile } from "../../middlewares/validateImageFile";
 const userRouter = express.Router();
 
 userRouter.post('/create-user',
-    upload.single('profile_img'), 
+    upload.single('profile_img'),
+    (req: Request, res: Response, next: NextFunction) => {
+        if (req.body.data) {
+            req.body = JSON.parse(req.body.data);
+        }
+        next();
+    },
     validateImageFile(2),
-    validateRequest(UserValidation.createUserZodSchema), 
+    validateRequest(UserValidation.createUserZodSchema),
     UserController.createUser);
 
 
 userRouter.get('/get-all-user', UserController.getAllUsers);
 userRouter.get('/get-user/:id', UserController.getUserById);
-userRouter.put('/update-user/:id', 
+userRouter.put('/update-user/:id',
     upload.single('profile_img'),
+    (req: Request, res: Response, next: NextFunction) => {
+        if (req.body.data) {
+            req.body = JSON.parse(req.body.data);
+        }
+        next();
+    },
     validateImageFile(2),
     validateRequest(UserValidation.updateUserZodSchema),
     UserController.updateUser);

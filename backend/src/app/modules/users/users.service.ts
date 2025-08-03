@@ -26,11 +26,11 @@ const getUserByIdFromDB = async (id: string) => {
     const result = await UserModel.findById(id);
     return result
  }
-const updateUserIntoDB = async (file:any,id: string, payload: IUser) => { 
-    const {path} = file;
-    if(path){
+const updateUserIntoDB = async (file:any,id: string, payload: Partial<IUser>) => { 
+    
+    if(file  && file?.path){
         const filename =  `${payload?.email}`;
-        const {secure_url} = await uploadImageToCloudinary(filename, path);
+        const {secure_url} = await uploadImageToCloudinary(filename, file.path);
         payload.profile_img = secure_url as string;
     }
     const result =  await UserModel.findOneAndUpdate({ _id: id }, payload, { new: true });
