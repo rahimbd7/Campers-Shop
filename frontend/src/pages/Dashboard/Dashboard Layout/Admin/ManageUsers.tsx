@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import {
   confirmAction,
@@ -25,7 +26,7 @@ const ManageUsers = () => {
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [isEditMode, setIsEditMode] = useState(false);
 
-  /** ✅ Default user structure for create mode */
+  /**  Default user structure for create mode */
   const defaultUser = {
     name: "",
     email: "",
@@ -34,10 +35,10 @@ const ManageUsers = () => {
     contactNo: "",
     address: "",
     isDeleted: false,
-    profile_img: "", // ✅ Added profile image field
+    profile_img: "", //  Added profile image field
   };
 
-  /** ✅ Field overrides */
+  /**  Field overrides */
   const overrides = {
     role: {
       type: "select",
@@ -58,14 +59,14 @@ const ManageUsers = () => {
   /** ✅ Merge defaultUser with selectedUser for edit mode */
   const baseUserData = { ...defaultUser, ...(isEditMode ? selectedUser : {}) };
 
-  /** ✅ Generate fields */
+  /**  Generate fields */
   const fields = generateFieldsFromObject(
     baseUserData,
     ["_id", "__v", "createdAt", "updatedAt"],
     overrides
   );
 
-  /** ✅ Handle DELETE */
+  /** Handle DELETE */
   const handleDelete = async (id: string) => {
     const confirmed = await confirmAction(
       "Delete User?",
@@ -83,7 +84,7 @@ const ManageUsers = () => {
     }
   };
 
-  /** ✅ Handle modal submit (FormData) */
+  /**  Handle modal submit (FormData) */
   const handleSubmit = async (formData: FormData) => {
     try {
       if (isEditMode) {
@@ -94,10 +95,11 @@ const ManageUsers = () => {
         await createUser(formData).unwrap();
         notifySuccess("User created successfully!");
       }
-    } catch (error) {
+    } catch (error: any) {
       notifyError(
         isEditMode ? "Failed to update user!" : "Failed to create user!"
       );
+     
     }
   };
 
@@ -179,7 +181,7 @@ const ManageUsers = () => {
         </table>
       </div>
 
-      {/* ✅ Dynamic Modal */}
+      {/*  Dynamic Modal */}
       {showModal && (
         <DynamicModalForUserManagement
           title={isEditMode ? "Update User" : "Create User"}

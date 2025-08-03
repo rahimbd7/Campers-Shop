@@ -20,7 +20,7 @@ export interface Field {
 interface DynamicModalProps {
   title: string;
   fields: Field[];
-  onSubmit: (formData: FormData) => void; // ✅ FormData for API
+  onSubmit: (formData: FormData) => void; // FormData for API
   closeModal: () => void;
   isEditMode?: boolean;
 }
@@ -57,25 +57,31 @@ const DynamicModalForUserManagement: React.FC<DynamicModalProps> = ({
     if (files && files.length > 0) {
       setFormData({
         ...formData,
-        [name]: files[0], // ✅ Only first file for profile image
+        [name]: files[0], //  Only first file for profile image
       });
     }
   };
 
-  /** ✅ Convert to FormData for API submission */
-  const handleSubmit = () => {
-    const dataToSend = new FormData();
-    Object.keys(formData).forEach((key) => {
-      if (formData[key] instanceof File) {
-        dataToSend.append(key, formData[key]);
-      } else {
-        dataToSend.append(key, formData[key]);
-      }
-    });
+  /**  Convert to FormData for API submission */
+ const handleSubmit = () => {
+  const dataToSend = new FormData();
 
-    onSubmit(dataToSend);
-    closeModal();
-  };
+  const payload: Record<string, any> = {};
+
+  Object.keys(formData).forEach((key) => {
+    if (formData[key] instanceof File) {
+      dataToSend.append("profile_img", formData[key]); //  Append file with correct key
+    } else {
+      payload[key] = formData[key];
+    }
+  });
+
+  dataToSend.append("data", JSON.stringify(payload)); // ✅ Send non-file fields as JSON under key "data"
+
+  onSubmit(dataToSend);
+  closeModal();
+};
+
 
   return (
     <div className="modal modal-open" role="dialog">
