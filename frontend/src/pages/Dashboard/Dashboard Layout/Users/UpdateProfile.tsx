@@ -1,13 +1,37 @@
 import DashboardPageWrapper from "../../Dashboard Components/DashboardPageWrapper";
 
+import { toast } from "react-toastify";
+import { useAppSelector } from "../../../../redux/hooks";
+import type { RootState } from "../../../../redux/store";
+import { useGetUserByIdQuery, useUpdateUserMutation } from "../../../../redux/features/user/userApis";
+import ProfileUpdateForm from "../../Dashboard Components/ProfileUpdateForm";
+
 const UpdateProfile = () => {
+  const { user } = useAppSelector((state: RootState) => state.auth);
+  const { data, isLoading } = useGetUserByIdQuery(user?.id);
+  const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
+
+  const userData = data?.data || {};
+
+  const handleUpdate = async (formData: FormData) => {
+    try {
+      await updateUser({ id: userData._id, formData }).unwrap();
+      toast.success("Profile updated successfully!");
+    } catch {
+      toast.error("Failed to update profile");
+    }
+  };
+
+  if (isLoading) return <p>Loading...</p>;
+
   return (
-    <div>
-      <DashboardPageWrapper title="Update Profile">
-        <p className="text-gray-700">Here you can manage all users.</p>
-        {/* Add your table or content here */}
-      </DashboardPageWrapper>
-    </div>
+    <DashboardPageWrapper title="Update Profile">
+      <ProfileUpdateForm
+        initialData={userData}
+        onSubmit={handleUpdate}
+        isLoading={isUpdating}
+      />
+    </DashboardPageWrapper>
   );
 };
 

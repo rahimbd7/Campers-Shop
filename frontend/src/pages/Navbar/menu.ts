@@ -10,8 +10,8 @@ const guestMenu: MenuItem[] = [
 ];
 
 const userMenu: MenuItem[] = [
-  { name: "Profile", path: "/profile" },
-  { name: "My Cart", path: "/my-cart" },
+  { name: "Profile", path: "/dashboard" },
+  { name: "My Cart", path: "/view-all-cart-items" },
   { name: "Logout",logout:true },
 ];
 

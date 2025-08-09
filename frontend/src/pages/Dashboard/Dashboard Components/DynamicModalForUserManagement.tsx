@@ -72,6 +72,8 @@ const DynamicModalForUserManagement: React.FC<DynamicModalProps> = ({
     if (formData[key] instanceof File) {
       dataToSend.append("profile_img", formData[key]); //  Append file with correct key
     } else {
+      //exclude password if empty in edit mode
+      if (isEditMode && key === "password" && !formData[key]) return;
       payload[key] = formData[key];
     }
   });

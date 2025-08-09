@@ -29,7 +29,7 @@ const Slider = () => {
             <div className="space-y-5 text-center bg-black/40 p-4 rounded">
               <h1 className="text-3xl w-2/3 lg:w-full lg:text-5xl font-bold text-white">
                 {slide.title}
-                <span className="text-[#00A4EF]">{slide.highlight}</span>
+                <span className="text-[#605DFF]">{slide.highlight}</span>
               </h1>
               <h4 className="text-xl lg:text-3xl font-bold text-white">
                 {slide.subtitle}
