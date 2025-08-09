@@ -3,6 +3,8 @@ import path from 'path'
 dotenv.config({
     path: path.join(process.cwd(), '.env'),
 })
+
+//mongodb+srv://rahimbd7:<db_password>@cluster0.tmt3t8e.mongodb.net/
 export default {
     node_env: process.env.NODE_ENV,
     port: process.env.PORT,
