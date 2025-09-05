@@ -14,7 +14,7 @@ import {
 import DynamicModalForProductManagement from "../../Dashboard Components/DynamicModalForProductManagement";
 
 const ManageProducts = () => {
-  const { data: products } = useGetAllProductsQuery(undefined, {
+  const { data: products } = useGetAllProductsQuery( undefined, {
     refetchOnMountOrArgChange: true,
   });
 
@@ -99,12 +99,15 @@ const ManageProducts = () => {
       }
     } catch (error) {
       console.error(error);
-      notifyError(isEditMode ? "Failed to update product!" : "Failed to create product!");
+      notifyError(
+        isEditMode ? "Failed to update product!" : "Failed to create product!"
+      );
     }
   };
 
   return (
-    <div className="p-6 bg-base-100 shadow-lg rounded-lg">
+    <div className="p-6 bg-base-200 min-h-screen rounded-lg">
+      {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-primary">Manage Products</h2>
         <button
@@ -119,61 +122,60 @@ const ManageProducts = () => {
         </button>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="table table-zebra w-full">
-          <thead>
-            <tr>
-              <th>Images</th>
-              <th>Name</th>
-              <th>Price</th>
-              <th>Stock</th>
-              <th className="text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products?.data?.map((product: any) => (
-              <tr key={product._id}>
-                <td className="flex gap-1">
-                  {product.images?.length > 0 ? (
-                    product.images.slice(0, 2).map((img: string, idx: number) => (
-                      <img
-                        key={idx}
-                        src={img}
-                        alt="Product"
-                        className="w-10 h-10 object-cover rounded"
-                      />
-                    ))
-                  ) : (
-                    <span>No Image</span>
-                  )}
-                </td>
-                <td>{product.name}</td>
-                <td>${product.price}</td>
-                <td>{product.stockQuantity}</td>
-                <td className="text-center flex gap-2 justify-center">
-                  <button
-                    className="btn btn-primary btn-xs"
-                    onClick={() => {
-                      setSelectedProduct(product);
-                      setIsEditMode(true);
-                      setShowModal(true);
-                    }}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="btn btn-error btn-xs"
-                    onClick={() => handleDelete(product._id)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {/* Product Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {products?.data?.map((product: any) => (
+          <div
+            key={product._id}
+            className="bg-base-100 shadow-lg rounded-lg p-4 flex flex-col hover:shadow-xl transition-shadow duration-300"
+          >
+            {/* Product Images */}
+            <div className="flex gap-2 mb-4">
+              {product.images?.length > 0 ? (
+                product.images.slice(0, 2).map((img: string, idx: number) => (
+                  <img
+                    key={idx}
+                    src={img}
+                    alt="Product"
+                    className="w-16 h-16 object-cover rounded"
+                  />
+                ))
+              ) : (
+                <span className="text-sm text-gray-500">No Image</span>
+              )}
+            </div>
+
+            {/* Product Info */}
+            <h3 className="text-lg font-semibold">{product.name}</h3>
+            <p className="text-primary font-bold">${product.price}</p>
+            <p className="text-sm text-gray-500">
+              Stock: {product.stockQuantity}
+            </p>
+
+            {/* Actions */}
+            <div className="mt-auto flex gap-2 pt-4">
+              <button
+                className="btn btn-primary btn-sm flex-1"
+                onClick={() => {
+                  setSelectedProduct(product);
+                  setIsEditMode(true);
+                  setShowModal(true);
+                }}
+              >
+                Edit
+              </button>
+              <button
+                className="btn btn-error btn-sm flex-1"
+                onClick={() => handleDelete(product._id)}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
 
+      {/* Modal */}
       {showModal && (
         <DynamicModalForProductManagement
           title={isEditMode ? "Update Product" : "Create Product"}

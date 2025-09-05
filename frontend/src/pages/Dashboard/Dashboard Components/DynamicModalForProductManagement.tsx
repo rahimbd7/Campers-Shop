@@ -1,25 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useGetCategoriesQuery } from "../../../redux/features/category/categoryApi";
 
-export interface ProductField {
-  name: string;
-  label: string;
-  type: string;
-  placeholder?: string;
-  defaultValue?: any;
-}
-
-interface ProductModalProps {
-  title: string;
-  fields: ProductField[];
-  onSubmit: (
-    formDataObject: Record<string, any>,
-    files: File[],
-    removedOldImages: string[]
-  ) => void;
-  closeModal: () => void;
-  isEditMode?: boolean;
-}
 
 const DynamicModalForProductManagement: React.FC<ProductModalProps> = ({
   title,
@@ -35,11 +16,14 @@ const DynamicModalForProductManagement: React.FC<ProductModalProps> = ({
     }, {} as Record<string, any>)
   );
 
+  const { data: categoriesData } = useGetCategoriesQuery();
+  const categories = categoriesData?.data || [];
+
   const [newImagePreviews, setNewImagePreviews] = useState<string[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [removedOldImages, setRemovedOldImages] = useState<string[]>([]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
@@ -49,7 +33,6 @@ const DynamicModalForProductManagement: React.FC<ProductModalProps> = ({
     if (files && files.length > 0) {
       const fileArray = Array.from(files);
       setSelectedFiles((prev) => [...prev, ...fileArray]);
-
       const previews = fileArray.map((file) => URL.createObjectURL(file));
       setNewImagePreviews((prev) => [...prev, ...previews]);
     }
@@ -97,10 +80,24 @@ const DynamicModalForProductManagement: React.FC<ProductModalProps> = ({
             .map((field) => (
               <div key={field.name} className="form-control">
                 <label className="label">
-                  <span className="label-text">{field.label}</span>
+                  <span className="label-text">{field.label==="CategoryId"?"Category Name":field.label}</span>
                 </label>
 
-                {field.type === "file" ? (
+                {field.name === "categoryId" ? (
+                  <select
+                    name="categoryId"
+                    value={formData.categoryId?._id || formData.categoryId}
+                    onChange={handleChange}
+                    className="select select-bordered w-full"
+                  >
+                    <option value="">Select Category</option>
+                    {categories.map((cat: any) => (
+                      <option key={cat._id} value={cat._id}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  </select>
+                ) : field.type === "file" ? (
                   <>
                     {isEditMode && Array.isArray(formData.images) && (
                       <div className="flex gap-2 mb-2 flex-wrap">
@@ -165,6 +162,7 @@ const DynamicModalForProductManagement: React.FC<ProductModalProps> = ({
               </div>
             ))}
 
+          {/* Radio buttons */}
           <div className="grid grid-cols-2 gap-6 mt-6 p-4 border rounded-lg">
             <div>
               <label className="label font-semibold">Delete Product?</label>

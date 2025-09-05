@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "name": "Alice",
+    "feedback": "The camping gear quality is top-notch! My family trip was so much easier with their tents and cookware.",
+    "rating": 5,
+    "image": "https://i.ibb.co/31B2hfr/pexels-andrea-piacquadio-3811663.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Bob",
+    "feedback": "Loved the hiking backpack I bought. Comfortable, lightweight, and perfect for long treks!",
+    "rating": 4.5,
+    "image": "https://i.ibb.co/NWxWpZ7/pexels-chloe-1043473.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Charlie",
+    "feedback": "The portable stove from Campers Shop made cooking in the wild so convenient. Highly satisfied!",
+    "rating": 4,
+    "image": "https://i.ibb.co/6W7vGQ5/pexels-cottonbro-studio-4921128.jpg"
+  },
+  {
+    "id": 4,
+    "name": "David",
+    "feedback": "Bought a sleeping bag and it was super warm and cozy even in chilly weather. Great quality!",
+    "rating": 5,
+    "image": "https://i.ibb.co/f9yKGkh/pexels-andrea-piacquadio-3778603.jpg"
+  },
+  {
+    "id": 5,
+    "name": "Eva",
+    "feedback": "The waterproof jackets kept us dry during heavy rain. Campers Shop really knows what adventurers need!",
+    "rating": 4.8,
+    "image": "https://i.ibb.co/TqqJjvc/pexels-andrea-piacquadio-733872.jpg"
+  },
+  {
+    "id": 6,
+    "name": "Frank",
+    "feedback": "Bought trekking shoes and they’re super durable and comfortable. Perfect for rough terrains!",
+    "rating": 5,
+    "image": "https://i.ibb.co/k3vr3QH/pexels-italo-melo-2379005-1.jpg"
+  }
+]

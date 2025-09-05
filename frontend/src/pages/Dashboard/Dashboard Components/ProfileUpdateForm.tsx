@@ -53,8 +53,6 @@ const ProfileUpdateForm: React.FC<ProfileUpdateFormProps> = ({
 
     onSubmit(dataToSend);
   };
-
-  console.log("formData", formData);
   return (
     <div className=" shadow-xl rounded-xl p-6 max-w-xl mx-auto">
       <h3 className="text-2xl font-semibold mb-6 text-center text-primary">

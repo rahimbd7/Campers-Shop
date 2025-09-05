@@ -12,7 +12,7 @@ const Category = () => {
   );
   return (
     <div className="container   mx-auto"  >
-      <h1 className="text-[#605DFF] text-3xl font-bold lg:text-5xl text-center  md:py-8 lg:py-10">
+      <h1 className="text-[#605DFF] text-2xl font-bold lg:text-3xl text-center  md:py-8 lg:py-10">
         Product Category
       </h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 py-8">

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import {
@@ -9,11 +11,15 @@ import { usePlaceOrderMutation } from "../../redux/features/Order/orderApi";
 
 import { toast } from "react-toastify";
 import type { RootState } from "../../redux/store";
-import { useAppDispatch } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { clearCart } from "../../redux/features/cart/cartSlice";
 
+
 const Checkout = () => {
-  const { user } = useSelector((state: RootState) => state.auth);
+ const backendUser = useAppSelector((state) => state.auth.backendUser);
+ const firebaseUser = useAppSelector((state) => state.auth.firebaseUser);
+  const user = backendUser || firebaseUser;
+  
   const { cartItems } = useSelector((state: RootState) => state.cart);
   const dispatch = useAppDispatch();
 
@@ -22,9 +28,9 @@ const Checkout = () => {
     data: res,
     isLoading: userLoading,
     isError: userError,
-  } = useGetUserByIdQuery(user?.id);
+  } = useGetUserByIdQuery(user?.id );
+ 
   const userData = res?.data || null;
-  // console.log(userData);
 
   const [phoneNumber, setPhoneNumber] = useState(userData?.contactNo);
 
@@ -44,30 +50,26 @@ const Checkout = () => {
 
   const handleCheckout = async () => {
     if (!userData) return toast.error("User not loaded");
-    console.log("address and phoneNumber", address, phoneNumber);
+    
 
     // Update phone/address before placing order
     const userPayload = {
-      id: userData._id,
+      
       address,
       contactNo: phoneNumber,
     };
-    console.log("userPayload", userPayload);
     try {
-      const result = await updateUser(userPayload);
-      console.log("result user update: ", result);
-    } catch (err) {
+       await updateUser({id: userData._id, formData:userPayload}).unwrap();
+    } catch (err:any) {
       toast.error("Failed to update user info", err);
       return;
     }
     //const prepareCartItemsData for order
-    const cartItemsData = cartData.map((item) => ({
+    const cartItemsData = cartData.map((item:any) => ({
       productId: item?._id,
       quantity: item?.quantity,
       priceAtOrderTime: item?.price,
     }));
-
-    console.log("cartItemsData", cartItemsData);
     const orderPayload = {
       userId: userData._id,
       items: cartItemsData,
@@ -78,7 +80,6 @@ const Checkout = () => {
     };
 
     try {
-      console.log(orderPayload);
       await createOrder(orderPayload).unwrap();
       dispatch(clearCart());
       setOrderSuccess(true);
@@ -96,7 +97,8 @@ const Checkout = () => {
     return <div className="text-red-600">Failed to load user.</div>;
 
   return (
-    <div className="max-w-6xl mx-auto p-4 grid md:grid-cols-2 gap-6">
+<div className="min-h-screen">
+      <div className="max-w-6xl mx-auto p-4 grid md:grid-cols-2 gap-6 ">
       {/* Customer Info */}
       <div className="bg-base-100 shadow-xl rounded-xl p-6 space-y-4">
         <h2 className="text-xl font-bold">Customer Information</h2>
@@ -114,7 +116,7 @@ const Checkout = () => {
             <input
               type="text"
               className="input input-bordered w-full"
-              value={phoneNumber || userData.contactNo}
+              value={phoneNumber || userData?.contactNo}
               onChange={(e) => setPhoneNumber(e.target.value)}
             />
           </div>
@@ -122,7 +124,7 @@ const Checkout = () => {
             <label className="font-semibold">Address:</label>
             <textarea
               className="textarea textarea-bordered w-full"
-              value={address || userData.address}
+             defaultValue={address || userData?.address}
               onChange={(e) => setAddress(e.target.value)}
             ></textarea>
           </div>
@@ -136,7 +138,7 @@ const Checkout = () => {
       {/* Cart Items */}
       <div className="bg-base-100 shadow-xl rounded-xl p-6 space-y-4">
         <h2 className="text-xl font-bold">Cart Summary</h2>
-        {cartData?.map((item) => (
+        {cartData?.map((item:any) => (
           <div key={item._id} className="border-b py-2">
             <p className="font-semibold">{item.name}</p>
             <p className="text-sm">Price: ${item.price}</p>
@@ -158,6 +160,7 @@ const Checkout = () => {
         )}
       </div>
     </div>
+</div>
   );
 };
 

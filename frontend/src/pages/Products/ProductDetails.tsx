@@ -1,12 +1,13 @@
 import { useParams } from "react-router-dom";
 import { useGetProductByIdQuery } from "../../redux/features/products/productApi";
 import { useAddToCart } from "../../utils/CartUtils/useAddToCart";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { toast } from "react-toastify";
 
 const ProductDetails = () => {
   const { productId } = useParams();
   const { data: product, isLoading } = useGetProductByIdQuery(productId as string);
-  const singleProduct = product?.data || {};
+  const singleProduct = useMemo(() => product?.data || {}, [product]);
 
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState("");
@@ -15,6 +16,7 @@ const ProductDetails = () => {
 
   const handleAddToCart = () => {
     addToCart(productId as string, quantity);
+    toast.success(` ${singleProduct?.name} added to cart`);
   };
 
   // Reset main image when product changes

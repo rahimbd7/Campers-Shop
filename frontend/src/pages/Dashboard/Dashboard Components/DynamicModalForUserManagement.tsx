@@ -132,6 +132,7 @@ const DynamicModalForUserManagement: React.FC<DynamicModalProps> = ({
                           src={formData[field.name]}
                           alt="Profile"
                           className="w-20 h-20 rounded-full object-cover"
+                          referrerPolicy="no-referrer"
                         />
                       </div>
                     )}

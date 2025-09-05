@@ -2,15 +2,17 @@ import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../redux/hooks";
-import type { RootState } from "../../redux/store";
 import { useGetAllProductsDetailsOfCartItemsQuery } from "../../redux/features/cart/cartApi";
 import { removeFromCart } from "../../redux/features/cart/cartSlice";
 import ProductModal from "../../components/ProductCartModal";
+import NoDataFound from "../../components/NoDataFound";
+import { selectCurrentUser } from "../../redux/features/auth/authSelector";
 
 const CartPage = () => {
   const dispatch = useDispatch();
   const cartItems = useAppSelector((state) => state.cart.cartItems);
-  const user = useSelector((state: RootState) => state.auth.user);
+  const currentUser = useAppSelector(selectCurrentUser);
+  const user = currentUser?.user;
   const navigate = useNavigate();
 
   const { data: responseData } = useGetAllProductsDetailsOfCartItemsQuery(cartItems);
@@ -32,13 +34,12 @@ const CartPage = () => {
       navigate("/checkout");
     }
   };
-
   return (
-    <div className="p-6 max-w-4xl mx-auto">
+    <div className="p-6 max-w-4xl mx-auto min-h-screen">
       <h1 className="text-2xl font-bold mb-4">My Cart</h1>
 
       {(cartItems.length === 0) ? (
-        <p>No items in cart</p>
+       <NoDataFound message="Your cart is empty" />
       ) : (
         <table className="table w-full">
           <thead>
@@ -56,7 +57,7 @@ const CartPage = () => {
               <tr key={item._id}>
                 <td>
                   <img
-                    src={item.image}
+                    src={item.images[0]||""}
                     alt={item.name}
                     className="w-12 h-12 object-cover rounded"
                   />

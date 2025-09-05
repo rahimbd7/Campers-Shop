@@ -4,13 +4,13 @@ const CategoryCard = ({ categoryData }) => {
   const navigate = useNavigate();
   const { _id, name, description, icon } = categoryData || {};
 
-  const handleCategoryProduct = (id) => {
-    navigate(`/products_by_category/${id}`);
+  const handleCategoryProduct = (id, name) => {
+    navigate(`/products_by_category/${id}`, { state: { name } });
   };
 
   return (
     <div
-      onClick={() => handleCategoryProduct(`${_id}`)}
+      onClick={() => handleCategoryProduct(`${_id}`, `${name}`)}
       className="flex justify-center"
     >
       <div className="card bg-base-100 w-2/3 shadow-sm hover:shadow-md transition-shadow duration-300">
@@ -22,7 +22,7 @@ const CategoryCard = ({ categoryData }) => {
           />
         </figure>
         <div className="card-body">
-          <h2 className="card-title text-xl md:text-xl lg:text-2xl font-semibold text-[#605DFF]">
+          <h2 className="card-title text-md  lg:text-xl font-semibold text-[#605DFF]">
             {name}
           </h2>
           <p className="text-sm sm:text-base md:text-lg text-gray-600">

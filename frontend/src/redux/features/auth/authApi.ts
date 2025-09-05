@@ -10,7 +10,14 @@ const authApi = baseApi.injectEndpoints({
                 body: userInfo
             }),
         }),
+        firebaseLogin: builder.mutation({
+            query: (token:string) => ({
+                url: "/auth/firebase-login",
+                method: "POST",
+                body: {token}
+            }),
+        })
     }),
 });
 
-export const { useLoginMutation } = authApi;
+export const { useLoginMutation, useFirebaseLoginMutation } = authApi;

@@ -30,9 +30,10 @@ export const productApi = baseApi.injectEndpoints({
       invalidatesTags: ["Product"],
     }),
 
-    getAllProducts: builder.query<IProduct[], void>({
-      query: () => ({
+    getAllProducts: builder.query<IProduct[], Record<string, string>>({
+      query: (filters) => ({
         url: "/products/get-all-products",
+        params: filters,
       }),
       providesTags: ["Product"],
       async onQueryStarted(_getAllProducts, { dispatch, queryFulfilled }) {

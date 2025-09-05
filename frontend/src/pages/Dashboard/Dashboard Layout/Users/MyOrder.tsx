@@ -1,14 +1,16 @@
+import LoadingSpinner from "../../../../components/LoadingSpinner";
+import { selectCurrentUser } from "../../../../redux/features/auth/authSelector";
 import { useGetUserOrdersQuery } from "../../../../redux/features/Order/orderApi";
 import { useAppSelector } from "../../../../redux/hooks";
-import type { RootState } from "../../../../redux/store";
 import OrderTable from "../../Dashboard Components/OrderTable";
 
 
 const MyOrder = () => {
-  const { user } = useAppSelector((state: RootState) => state.auth);
+const currentUser = useAppSelector(selectCurrentUser);
+  const user = currentUser?.user;
   const { data, isLoading } = useGetUserOrdersQuery(user?.id);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <LoadingSpinner message="Orders loading..." />;
 
   return (
     <div className="p-6">

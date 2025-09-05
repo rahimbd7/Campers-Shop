@@ -26,7 +26,7 @@ const ProductCart = ({ cartData }: { cartData: cartData }) => {
       </figure>
       <div className="card-body">
         <h2 className="card-title justify-center text-lg text-center">{name}</h2>
-        <p className="text-sm text-justify">{description}</p>
+        <p className="text-sm text-justify">{description?.slice(0, 100)}</p>
 
         <div className="flex flex-col gap-3 mt-4">
           <p className="font-bold text-xl text-center text-primary">${price}</p>

@@ -1,4 +1,5 @@
 import ManageCategories from "../pages/Dashboard/Dashboard Layout/Admin/ManageCategories";
+import ManageOrders from "../pages/Dashboard/Dashboard Layout/Admin/ManageOrders";
 import ManageProducts from "../pages/Dashboard/Dashboard Layout/Admin/ManageProducts";
 import ManageUsers from "../pages/Dashboard/Dashboard Layout/Admin/ManageUsers";
 
@@ -14,5 +15,9 @@ export const adminRoutes =  [
       {
         path: "manage-categories",
         element: <ManageCategories />,
+      },
+      {
+        path: "manage-orders",
+        element: <ManageOrders />,
       }
     ]

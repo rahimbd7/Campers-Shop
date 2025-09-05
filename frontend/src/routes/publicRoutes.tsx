@@ -5,6 +5,7 @@ import LoginPage from "../pages/Login/LoginPage";
 import AllProducts from "../pages/Products/AllProducts";
 import ProductDetails from "../pages/Products/ProductDetails";
 import ProductsByCategory from "../pages/Products/ProductsByCategory";
+import Register from "../pages/Register/Register";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 
 export const publicRoutes =  [
@@ -31,6 +32,10 @@ export const publicRoutes =  [
       {
         path: "/login",
         element: <LoginPage />,
+      },
+      {
+        path: "/register",
+        element: <Register />,
       },
       {
         path: "/checkout",

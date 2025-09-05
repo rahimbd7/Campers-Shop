@@ -2,6 +2,11 @@ import type { sidebarMenuItems } from "../../../interface/common";
 
 export const sideBarMenus: sidebarMenuItems[] = [
     { name: "Dashboard", path: "/dashboard", role: ["admin", "user"] },
+    {
+        name: "Manage Orders",
+        path: "/dashboard/manage-orders",
+        role: ["admin"],
+    },
     { name: "Manage Users", path: "/dashboard/manage-users", role: ["admin"] },
     { name: "Manage Products", path: "/dashboard/manage-products", role: ["admin"] },
     { name: "Manage Categories", path: "/dashboard/manage-categories", role: ["admin"] },

@@ -3,7 +3,9 @@ import AdminDashboard from "./Dashboard Layout/Admin/AdminDashboard";
 import UserDashboard from "./Dashboard Layout/Users/UserDashboard";
 
 const Dashboard = () => {
-  const {user} = useAppSelector((state) => state.auth);
+ const backendUser = useAppSelector((state) => state.auth.backendUser);
+ const firebaseUser = useAppSelector((state) => state.auth.firebaseUser);
+  const user = backendUser || firebaseUser;
    if(user?.role === "user") {
     return <UserDashboard />;
   } else {

@@ -39,12 +39,22 @@ const categoryApi = baseApi.injectEndpoints({
         }
       },
     }),
+
+    //Delete category
+    deleteCategory: builder.mutation<ICategory, string>({
+      query: (id) => ({
+        url: `/category/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Category"],
+    })
   }),
 });
 
 export const {
   useGetCategoriesQuery,
   useCreateCategoryMutation,
+  useDeleteCategoryMutation
 } = categoryApi;
 
 export default categoryApi;

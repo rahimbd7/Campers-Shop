@@ -26,7 +26,6 @@ const ManageUsers = () => {
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [isEditMode, setIsEditMode] = useState(false);
 
-  /**  Default user structure for create mode */
   const defaultUser = {
     name: "",
     email: "",
@@ -35,10 +34,9 @@ const ManageUsers = () => {
     contactNo: "",
     address: "",
     isDeleted: false,
-    profile_img: "", //  Added profile image field
+    profile_img: "",
   };
 
-  /**  Field overrides */
   const overrides = {
     role: {
       type: "select",
@@ -56,17 +54,14 @@ const ManageUsers = () => {
     },
   };
 
-  /** ✅ Merge defaultUser with selectedUser for edit mode */
   const baseUserData = { ...defaultUser, ...(isEditMode ? selectedUser : {}) };
 
-  /**  Generate fields */
   const fields = generateFieldsFromObject(
     baseUserData,
     ["_id", "__v", "createdAt", "updatedAt"],
     overrides
   );
 
-  /** Handle DELETE */
   const handleDelete = async (id: string) => {
     const confirmed = await confirmAction(
       "Delete User?",
@@ -78,34 +73,31 @@ const ManageUsers = () => {
       try {
         await deleteUser(id).unwrap();
         notifySuccess("User deleted successfully!");
-      } catch (error) {
+      } catch {
         notifyError("Failed to delete user. Please try again.");
       }
     }
   };
 
-  /**  Handle modal submit (FormData) */
   const handleSubmit = async (formData: FormData) => {
     try {
       if (isEditMode) {
         await updateUser({ id: selectedUser._id as string, formData }).unwrap();
         notifySuccess("User updated successfully!");
       } else {
-        console.log("Creating user:", Object.fromEntries(formData));
         await createUser(formData).unwrap();
         notifySuccess("User created successfully!");
       }
-    } catch (error: any) {
+    } catch {
       notifyError(
         isEditMode ? "Failed to update user!" : "Failed to create user!"
       );
-     
     }
   };
 
   return (
-    <div className="p-6 bg-base-100 shadow-lg rounded-lg">
-      <div className="flex justify-between items-center mb-6">
+    <div className="p-6 bg-base-100 shadow-xl rounded-lg">
+      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-6">
         <h2 className="text-2xl font-bold text-primary">Manage Users</h2>
         <button
           className="btn btn-primary"
@@ -119,7 +111,8 @@ const ManageUsers = () => {
         </button>
       </div>
 
-      <div className="overflow-x-auto">
+      {/* Table for desktop / card list for mobile */}
+      <div className="overflow-x-auto  hidden lg:block">
         <table className="table table-zebra w-full">
           <thead>
             <tr>
@@ -139,9 +132,10 @@ const ManageUsers = () => {
                       src={user?.profile_img}
                       alt="Profile"
                       className="w-10 h-10 rounded-full object-cover"
+                      referrerPolicy="no-referrer"
                     />
                   ) : (
-                    <span>No Image</span>
+                    <span className="text-gray-400 italic">No Image</span>
                   )}
                 </td>
                 <td>{user.name}</td>
@@ -181,7 +175,64 @@ const ManageUsers = () => {
         </table>
       </div>
 
-      {/*  Dynamic Modal */}
+      {/* Card view for mobile */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden">
+        {users?.data?.map((user: any) => (
+          <div
+            key={user._id}
+            className="p-4 border rounded-lg shadow-sm  flex flex-col gap-2"
+          >
+            <div className="flex items-center gap-3">
+              {user.profile_img ? (
+                <img
+                  src={user?.profile_img}
+                  alt="Profile"
+                  className="w-12 h-12 rounded-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+              ) : (
+                <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                  N/A
+                </div>
+              )}
+              <div>
+                <p className="font-semibold">{user.name}</p>
+                <p className="text-sm text-gray-500">{user.email}</p>
+              </div>
+            </div>
+            <div>
+              <span
+                className={`badge ${
+                  user.role === "admin"
+                    ? "badge-primary"
+                    : "badge-secondary"
+                }`}
+              >
+                {user.role}
+              </span>
+            </div>
+            <div className="flex gap-2 mt-2">
+              <button
+                className="btn btn-primary btn-xs flex-1"
+                onClick={() => {
+                  setSelectedUser(user);
+                  setIsEditMode(true);
+                  setShowModal(true);
+                }}
+              >
+                Edit
+              </button>
+              <button
+                className="btn btn-error btn-xs flex-1"
+                onClick={() => handleDelete(user._id)}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
       {showModal && (
         <DynamicModalForUserManagement
           title={isEditMode ? "Update User" : "Create User"}

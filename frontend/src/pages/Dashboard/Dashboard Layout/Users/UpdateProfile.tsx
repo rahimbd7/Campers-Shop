@@ -2,12 +2,14 @@ import DashboardPageWrapper from "../../Dashboard Components/DashboardPageWrappe
 
 import { toast } from "react-toastify";
 import { useAppSelector } from "../../../../redux/hooks";
-import type { RootState } from "../../../../redux/store";
+
 import { useGetUserByIdQuery, useUpdateUserMutation } from "../../../../redux/features/user/userApis";
 import ProfileUpdateForm from "../../Dashboard Components/ProfileUpdateForm";
+import { selectCurrentUser } from "../../../../redux/features/auth/authSelector";
 
 const UpdateProfile = () => {
-  const { user } = useAppSelector((state: RootState) => state.auth);
+  const currentUser = useAppSelector(selectCurrentUser);
+  const user = currentUser?.user;
   const { data, isLoading } = useGetUserByIdQuery(user?.id);
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
 

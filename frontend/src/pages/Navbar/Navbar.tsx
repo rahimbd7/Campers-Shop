@@ -1,8 +1,11 @@
 import { NavLink, useNavigate } from "react-router-dom";
-import getMenu, { type MenuItem, type Role } from "./menu";
+import getMenu from "./menu";
+import type { MenuItem, Role } from "../../interface/common";
 import { FiShoppingCart } from "react-icons/fi";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { logout } from "../../redux/features/auth/authSlice";
+import { TentTree } from "lucide-react";
+import { selectCurrentUser } from "../../redux/features/auth/authSelector";
 
 
 
@@ -13,9 +16,11 @@ const Navbar = () => {
   const numberOfCartItems = useAppSelector(
     (state) => state.cart.cartItems.length
   );
-  const user = useAppSelector((state) => state.auth.user);
-  const role = (user?.role as Role) ?? null;
-  const isLogin = user !== null;
+const currentUser = useAppSelector(selectCurrentUser);
+
+  const user = currentUser?.user;
+  const role = user?.role || "user"; // default role
+  const isLogin = !!user;
 
   const menu_items = getMenu(role, isLogin);
 
@@ -67,8 +72,9 @@ const Navbar = () => {
               ))}
             </ul>
           </div>
-          <NavLink to="/" className="text-2xl font-bold">
-            Campers Shop
+          <NavLink to="/" className="md:text-xl font-bold flex items-center gap-2">
+          <TentTree className="w-10 h-10 text-[#605DFF] " />
+           <p className="hidden lg:block">Campers Shop</p>
           </NavLink>
         </div>
 

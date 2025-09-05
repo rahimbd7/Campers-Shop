@@ -1,6 +1,7 @@
 // components/ProductModal.tsx
 import { useState } from "react";
 import { useAddToCart } from "../utils/CartUtils/useAddToCart";
+import { toast } from "react-toastify";
 
 
 interface ProductModalProps {
@@ -25,6 +26,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
   const handleAddToCart = () => {
     if (quantity && productId) {
       addToCart(productId, quantity, isEditMode ?? false); // This must call the hook correctly
+      toast.success(` ${name} added to cart`);
     }
     closeModal();
   };
@@ -38,6 +40,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
           alt={name}
           className="w-full h-40 object-cover my-4 rounded"
         />
+        <p className="text-md ">Quantity </p>
         <div className="flex items-center justify-center gap-4 py-4">
           <button
             className="btn"
