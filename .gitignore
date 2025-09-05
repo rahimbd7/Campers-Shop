@@ -2,6 +2,8 @@
 .env
 .DS_Store
 .vscode
+# Backend Config
+backend/src/app/config/campersShopServiceAccountKey.json
 
 # Node modules
 backend/node_modules/
