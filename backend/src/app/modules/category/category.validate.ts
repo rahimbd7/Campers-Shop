@@ -6,7 +6,7 @@ const createCategoryZodSchema = z.object({
       required_error: 'Name is required',
     }),
     description: z.string().optional(),
-    icon: z.string().url('Invalid image url').optional(),
+    icon: z.string().optional(),
   }),
 });
 
@@ -14,7 +14,7 @@ const updateCategoryZodSchema = z.object({
   body: z.object({
     name: z.string().optional(),
     description: z.string().optional(),
-    icon: z.string().url('Invalid image url').optional(),
+    icon: z.string().optional(),
   }),
 });
 

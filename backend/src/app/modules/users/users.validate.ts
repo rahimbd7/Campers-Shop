@@ -13,7 +13,7 @@ const createUserZodSchema = z.object({
     }).min(6, 'Password must be at least 6 characters'),
     contactNo: z.string({
       required_error: 'Contact number is required',
-    }),
+    }).optional(),
     address: z.string().optional(),
     // profile_img: z.string().optional(),
   }),

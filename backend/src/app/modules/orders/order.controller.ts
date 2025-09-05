@@ -49,8 +49,8 @@ const getAllOrders = catchAsync(async (req: Request, res: Response) => {
 
 const updateOrderStatus = catchAsync(async (req: Request, res: Response) => {
   const { orderId } = req.params;
-  const payload = req.body;
-  const result = await OrderService.updateOrderStatusFromDB(orderId, payload);
+  const {status} = req.body?.body;
+  const result = await OrderService.updateOrderStatusFromDB(orderId, status);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

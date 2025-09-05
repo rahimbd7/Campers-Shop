@@ -58,11 +58,14 @@ const getOrdersByUserFromDB = async (userId: string) => {
 };
 
 const getAllOrdersFromDB = async () => {
-  return await OrderModel.find().populate("items.productId");
+  return await OrderModel.find()
+  .populate("items.productId", "name price")
+  .populate("userId", "name email");
 };
 
 const updateOrderStatusFromDB = async (orderId: string, status: string) => {
-  return await OrderModel.findByIdAndUpdate(orderId, { status }, { new: true });
+  const result = await OrderModel.findByIdAndUpdate(orderId, { status }, { new: true });
+  return result;
 };
 
 export const OrderService = {

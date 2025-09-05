@@ -71,7 +71,9 @@ const getAllProductsFromDB = async (filters: any) => {
     sortCondition[sortBy] = sortOrder === "desc" ? -1 : 1;
   }
 
-  return await ProductModel.find(query).sort(sortCondition);
+  return await ProductModel.find(query)
+  .populate("categoryId", "name")
+  .sort(sortCondition);
 };
 
 
@@ -94,7 +96,6 @@ const updateProductIntoDB = async (
     for (const imgUrl of payload.removedOldImages) {
       await deleteImageFromCloudinary(imgUrl);
     }
-
     product.images = product.images.filter(
       (img) => !payload.removedOldImages?.includes(img)
     );
@@ -112,6 +113,11 @@ const updateProductIntoDB = async (
     product.images.push(...newImageUrls);
   }
 
+  // ✅ Extract categoryId._id if sent as object
+  if (payload.categoryId && typeof payload.categoryId === "object" && "_id" in payload.categoryId) {
+    payload.categoryId = payload.categoryId._id;
+  }
+
   // ✅ Update other fields (except removedOldImages)
   const { removedOldImages, ...restPayload } = payload;
   Object.assign(product, restPayload);
@@ -120,12 +126,13 @@ const updateProductIntoDB = async (
   return product;
 };
 
+
  const deleteProductByIdFromDB = async (id: string) => {
   return await ProductModel.findByIdAndUpdate(id,{ isDeleted: true });
 };
 
 const getProductByCategoryIdFromDB = async (categoryId: string) => {
-  return await ProductModel.find({ categoryId }).populate('categoryId');
+  return await ProductModel.find({ categoryId, isDeleted: false }).populate('categoryId');
 };
 
 

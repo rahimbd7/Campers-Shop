@@ -1,13 +1,21 @@
+import { NextFunction } from "express";
+import uploadImageToCloudinary from "../../utils/FileUploader/uploadImageToCloudinary";
 import { ICategory } from "./category.interface";
 import { CategoryModel } from "./category.model";
 
 
-const createCategoryIntoDB = async (payload: ICategory) => {
-    return await CategoryModel.create(payload);
-};
+    const createCategoryIntoDB = async (file:any, payload: ICategory,next : NextFunction) => {
+      
+        if(file  && file?.path){
+            const filename =  `${payload?.name}`; 
+            const {secure_url} = await uploadImageToCloudinary(filename, file.path);
+            payload.icon = secure_url as string;
+        }
+        return await CategoryModel.create(payload);
+    };
 
 const getAllCategoryFromDB = async () => {
-    return await CategoryModel.find();
+    return await CategoryModel.find({ isDeleted: false });
 };
 
 const deleteCategoryFromDBById = async (id: string) => {

@@ -1,3 +1,4 @@
 node_modules
 .env
 dist
+src/app/config/campersShopServiceAccountKey.json

@@ -29,32 +29,12 @@ const uploadImageToCloudinary = async (filename: string, path: string): Promise<
     //    .catch((error) => {
     //        console.log(error);
     //    });
-    return uploadResult;
-    // console.log(uploadResult);
-    
-    // // Optimize delivery by resizing and applying auto-format and auto-quality
-    // const optimizeUrl = cloudinary.url('shoes', {
-    //     fetch_format: 'auto',
-    //     quality: 'auto'
-    // });
-    
-    // console.log(optimizeUrl);
-    
-    // // Transform the image: auto-crop to square aspect_ratio
-    // const autoCropUrl = cloudinary.url('shoes', {
-    //     crop: 'auto',
-    //     gravity: 'auto',
-    //     width: 500,
-    //     height: 500,
-    // });
-    
-    // console.log(autoCropUrl);    
+    return uploadResult;  
 };
 
 
 
 export const deleteImageFromCloudinary = async (imageUrl: string) => {
-  // ✅ Extract public_id from image URL
   const parts = imageUrl.split("/");
   const publicIdWithExt = parts[parts.length - 1];
   const publicId = publicIdWithExt.split(".")[0];
