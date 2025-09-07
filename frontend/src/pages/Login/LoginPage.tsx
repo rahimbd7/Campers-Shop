@@ -155,7 +155,7 @@ const handleGithubLogin = async () => {
           className="btn btn-primary w-full mt-2"
           disabled={isLoading}
         >
-          {isLoading ? "Logging in..." : "Login with Backend"}
+          {isLoading ? "Logging in..." : "Login"}
         </button>
       </form>
 
