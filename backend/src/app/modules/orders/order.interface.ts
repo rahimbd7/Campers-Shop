@@ -14,4 +14,5 @@ export interface IOrder {
   deliveryAddress: string;
   contactPhone: string;
   status?: "pending" | "confirmed" | "shipped" | "delivered";
+  stripePaymentIntentId?: string;
 }

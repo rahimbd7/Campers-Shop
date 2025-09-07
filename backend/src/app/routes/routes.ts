@@ -10,6 +10,7 @@ import { ProductRoutes } from '../modules/products/products.routes';
 import { CartRoutes } from '../modules/cart/cart.route';
 import { AuthRoutes } from '../modules/auth/auth.route';
 import { OrderRoutes } from '../modules/orders/order.route';
+import { paymentRoutes } from '../modules/payment/stripe/payment.stripe.route';
 
 
 
@@ -39,6 +40,10 @@ const moduleRoutes = [
     {
         path: '/orders',
         route: OrderRoutes
+    },
+    {
+        path:'/payment',
+        route:paymentRoutes
     }
 
 ]

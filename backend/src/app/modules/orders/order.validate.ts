@@ -49,6 +49,7 @@ export const createOrderZodSchema = z.object({
       .enum(['pending', 'confirmed', 'shipped', 'delivered'])
       .optional(),
   }),
+  stripePaymentIntentId: z.string().optional(),
 });
 
 // Update Order Schema wrapped in z.object({ body: ... })

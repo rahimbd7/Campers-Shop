@@ -21,6 +21,7 @@ const orderSchema = new Schema<IOrder>(
       enum: ["pending", "confirmed", "shipped", "delivered"],
       default: "pending",
     },
+    stripePaymentIntentId: { type: String },
   },
   { timestamps: true }
 );
