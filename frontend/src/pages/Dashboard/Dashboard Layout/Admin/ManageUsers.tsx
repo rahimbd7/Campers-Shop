@@ -124,7 +124,8 @@ const ManageUsers = () => {
             </tr>
           </thead>
           <tbody>
-            {users?.data?.map((user: any) => (
+            {users?.data?.filter ((user: any) => user.role !== "admin" && !user.isDeleted)
+            .map((user: any) => (
               <tr key={user._id}>
                 <td>
                   {user.profile_img ? (
@@ -177,7 +178,7 @@ const ManageUsers = () => {
 
       {/* Card view for mobile */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:hidden">
-        {users?.data?.map((user: any) => (
+        {users?.data?.filter ((user: any) => user.role !== "admin" && !user.isDeleted).map((user: any) => (
           <div
             key={user._id}
             className="p-4 border rounded-lg shadow-sm  flex flex-col gap-2"

@@ -1,10 +1,9 @@
 import { motion } from "framer-motion";
-import BestSelling from "../../components/BestSelling";
 import Category from "../../components/Category";
 import FAQ from "../../components/FAQ";
-import FeaturedProduct from "../../components/FeaturedProduct";
 import Slider from "../../components/Slider";
 import Testimonals from "../../components/Testimonals";
+import ProductsSection from "../../components/ProductSection";
 
 const Home = () => {
   // Animation variants for reusability
@@ -31,7 +30,7 @@ const Home = () => {
         variants={sectionVariants}
         transition={{ duration: 0.6, delay: 0.2 }}
       >
-        <BestSelling />
+        <ProductsSection title="Best Selling" filterKey="isBestSelling" headingColor="#605DFF" />
       </motion.div>
 
       <motion.div
@@ -51,7 +50,7 @@ const Home = () => {
         variants={sectionVariants}
         transition={{ duration: 0.6, delay: 0.6 }}
       >
-        <FeaturedProduct />
+       <ProductsSection title="Featured" filterKey="isFeatured"  headingColor="#605DFF"/>
       </motion.div>
 
       <motion.div

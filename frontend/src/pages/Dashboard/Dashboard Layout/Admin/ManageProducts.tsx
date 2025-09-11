@@ -80,6 +80,7 @@ const ManageProducts = () => {
         stockQuantity: Number(formDataObject.stockQuantity),
         isDeleted: formDataObject.isDeleted === "true",
         isFeatured: formDataObject.isFeatured === "true",
+        isBestSelling: formDataObject.isBestSelling === "true",
         removedOldImages,
       };
 

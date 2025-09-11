@@ -76,7 +76,7 @@ const DynamicModalForProductManagement: React.FC<ProductModalProps> = ({
 
         <div className="space-y-4">
           {fields
-            .filter((f) => f.name !== "isDeleted" && f.name !== "isFeatured")
+            .filter((f) => f.name !== "isDeleted" && f.name !== "isFeatured" && f.name!=="isBestSelling")
             .map((field) => (
               <div key={field.name} className="form-control">
                 <label className="label">
@@ -163,7 +163,7 @@ const DynamicModalForProductManagement: React.FC<ProductModalProps> = ({
             ))}
 
           {/* Radio buttons */}
-          <div className="grid grid-cols-2 gap-6 mt-6 p-4 border rounded-lg">
+          <div className="grid grid-cols-3 gap-6 mt-6 p-4 border rounded-lg">
             <div>
               <label className="label font-semibold">Delete Product?</label>
               <div className="flex gap-4">
@@ -210,6 +210,31 @@ const DynamicModalForProductManagement: React.FC<ProductModalProps> = ({
                     value="false"
                     checked={formData.isFeatured === "false"}
                     onChange={() => handleRadioChange("isFeatured", "false")}
+                  />{" "}
+                  No
+                </label>
+              </div>
+            </div>
+            <div>
+              <label className="label font-semibold">Best Selling?</label>
+              <div className="flex gap-4">
+                <label>
+                  <input
+                    type="radio"
+                    name="isBestSelling"
+                    value="true"
+                    checked={formData.isBestSelling === "true"}
+                    onChange={() => handleRadioChange("isBestSelling", "true")}
+                  />{" "}
+                  Yes
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="isBestSelling"
+                    value="false"
+                    checked={formData.isBestSelling === "false"}
+                    onChange={() => handleRadioChange("isBestSelling", "false")}
                   />{" "}
                   No
                 </label>

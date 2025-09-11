@@ -2,6 +2,7 @@ import { useState } from "react";
 import { LogOut, User } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { logout } from "../../../redux/features/auth/authSlice";
+import { NavLink } from "react-router-dom";
 
 
 const DashboardHeader = ({ user }: { user: any }) => {
@@ -11,7 +12,8 @@ const DashboardHeader = ({ user }: { user: any }) => {
   return (
     <div className="flex justify-between items-center px-4 py-3 bg-[#1e293b]  shadow-md">
       {/* Logo / Title */}
-      <h1 className="text-2xl font-bold"><span className="text-white">Dashboard</span></h1>
+      <h1 className="text-2xl font-bold hidden md:block"><span className="text-white">Dashboard</span></h1>
+      <NavLink to="/"><h1 className="text-2xl font-bold"><span className="text-[#605DFF]">Campers Shop</span></h1></NavLink>
 
       {/* Right Section */}
       <div className="relative">

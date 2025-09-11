@@ -1,5 +1,3 @@
-import { useSelector } from "react-redux";
-import type { RootState } from "../../../redux/store";
 import { getSidebarMenu } from "../../../utils/DashboardUtils/SidebarMenuGenerator";
 import { sideBarMenus } from "./SidebarMenu";
 import type { Role } from "../../../interface/common";
@@ -28,7 +26,7 @@ const Sidebar = () => {
         </ul>
         <div className="dropdown dropdown-start block md:hidden ">
           <div tabIndex={0} role="button" className="w-full p-2 flex gap-2 items-center">
-           <TentTree className="w-10 h-10 text-[#605DFF] " /> <p className="text-xl ">Menu</p> 
+           <TentTree className="w-10 h-10 text-[#605DFF] " /> <p className="text-xl text-white font-bold  ">Menu</p> 
           </div>
           <ul
             tabIndex={0}
