@@ -4,6 +4,8 @@ import validateRequest from '../../middlewares/validateRequest';
 import { CategoryValidation } from './category.validate';
 import { upload } from '../../utils/FileUploader/fileUploadByMulter';
 import { validateImageFile } from '../../middlewares/validateImageFile';
+import auth from '../../middlewares/auth';
+import { USER_ROLE } from '../users/users.constants';
 
 const categoryRouter = express.Router();
 
@@ -15,11 +17,12 @@ categoryRouter.post('/',
         }
         next();
     },
+     auth(USER_ROLE.admin),
     validateImageFile(2),
     validateRequest(CategoryValidation.createCategoryZodSchema), CategoryController.createCategory);
 
 categoryRouter.get('/', CategoryController.getAllCategory);
-categoryRouter.delete('/:id', CategoryController.deleteCategory);
+categoryRouter.delete('/:id',  auth(USER_ROLE.admin),CategoryController.deleteCategory);
 
 
 

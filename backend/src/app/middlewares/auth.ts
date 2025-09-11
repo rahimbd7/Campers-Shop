@@ -4,10 +4,10 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import UserModel from "../modules/users/users.model";
 import { TUSER } from "../modules/users/users.constants";
 import { NextFunction, Request, Response } from "express";
-import admin from "./firebase"; 
+import admin from "./firebase";
 
-const auth = (...requiredRole: TUSER[]) => async (req: Request, res: Response, next: NextFunction) => {
-  return catchAsync(async (req, res, next) => {
+const auth = (...requiredRole: TUSER[]) =>
+  catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
       throw new Error("You are not logged in");
@@ -20,14 +20,14 @@ const auth = (...requiredRole: TUSER[]) => async (req: Request, res: Response, n
     try {
       // ✅ Try verifying with backend JWT
       const decoded = jwt.verify(token, config.jwt_access_secret as string) as JwtPayload;
-      email = decoded.email;
+      email = decoded.email ?? null;
       role = decoded.role as TUSER;
-    } catch (err) {
+    } catch {
       // ✅ Fallback: try verifying with Firebase
       try {
         const decodedFirebase = await admin.auth().verifyIdToken(token);
         email = decodedFirebase.email ?? null;
-      } catch (fbErr) {
+      } catch {
         throw new Error("Invalid token");
       }
     }
@@ -47,9 +47,9 @@ const auth = (...requiredRole: TUSER[]) => async (req: Request, res: Response, n
       throw new Error("Unauthorized");
     }
 
-    req.user = { email, role: user.role };
+    // ✅ Attach user info to request
+    (req as any).user = { email, role: user.role };
     next();
   });
-};
 
 export default auth;

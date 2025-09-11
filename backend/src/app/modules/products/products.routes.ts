@@ -3,6 +3,8 @@ import { ProductController } from "./products.controller";
 import validateRequest from "../../middlewares/validateRequest";
 import { ProductValidation } from "./products.validate";
 import { upload } from "../../utils/FileUploader/fileUploadByMulter";
+import auth from "../../middlewares/auth";
+import { USER_ROLE } from "../users/users.constants";
 
 
 const productRouter = express.Router();
@@ -30,9 +32,10 @@ productRouter.patch(
     }
     next();
   },
+  auth(USER_ROLE.admin),
   validateRequest(ProductValidation.updateProductZodSchema),
   ProductController.updateProduct
 );
-productRouter.delete("/delete-product/:id", ProductController.deleteProduct);
+productRouter.delete("/delete-product/:id", auth(USER_ROLE.admin), ProductController.deleteProduct);
 
 export const ProductRoutes = productRouter;

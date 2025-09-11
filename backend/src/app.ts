@@ -1,4 +1,4 @@
-import express, { Application } from "express";
+import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path"
@@ -14,8 +14,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-app.get("/", (req, res) => {
-    res.send("Welcome to campers shop backend! ");
+app.get('/', (req: Request, res: Response) => {
+    res.sendFile(path.join(__dirname, 'index.html'))
+})
+
+app.get('/api', (req, res) => {
+    res.json({
+        success: true,
+        path: req.path,
+        message: "You are in the base API route. Navigate further, e.g., /api/products/get-all-products, /api/category etc.",
+    });
 });
 
 

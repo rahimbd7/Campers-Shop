@@ -11,6 +11,7 @@ const productSchema = new Schema<IProduct>({
   rating: { type: Number, default: 0 },
   isFeatured: { type: Boolean, default: false },
   isDeleted: { type: Boolean, default: false },
+  isBestSelling: { type: Boolean, default: false },
 },{
     timestamps: true,
     toJSON: { virtuals: true },
