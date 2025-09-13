@@ -28,6 +28,7 @@
     "mongodb": "^6.17.0",
     "mongoose": "^8.16.1",
     "multer": "^2.0.2",
+    "streamifier": "^0.1.1",
     "stripe": "^18.5.0",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3",
@@ -40,6 +41,7 @@
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "9.0.7",
     "@types/multer": "^2.0.0",
+    "@types/streamifier": "^0.1.2",
     "ts-node-dev": "^2.0.0"
   }
 }
