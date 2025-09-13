@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { generateFieldsFromObject } from "../../../../utils/DashboardUtils/generateFieldsFromObject";
 import {
@@ -12,9 +13,10 @@ import {
   useCreateProductMutation,
 } from "../../../../redux/features/products/productApi";
 import DynamicModalForProductManagement from "../../Dashboard Components/DynamicModalForProductManagement";
+import type { Field } from "../../../../interface/common";
 
 const ManageProducts = () => {
-  const { data: products } = useGetAllProductsQuery( undefined, {
+  const { data: products } = useGetAllProductsQuery( undefined as any, {
     refetchOnMountOrArgChange: true,
   });
 
@@ -35,11 +37,11 @@ const ManageProducts = () => {
     images: [],
   };
 
-  const overrides = {
-    price: { type: "number", placeholder: "Enter price" },
-    stockQuantity: { type: "number", placeholder: "Enter stock quantity" },
-    images: { type: "file", label: "Upload Images", multiple: true },
-  };
+  const overrides: Partial<Record<string, Partial<Field>>> = {
+  price: { type: "number", placeholder: "Enter price" },
+  stockQuantity: { type: "number", placeholder: "Enter stock quantity" },
+  images: { type: "file", label: "Upload Images", multiple: true },
+};
 
   const baseProductData = {
     ...defaultProduct,
@@ -125,7 +127,7 @@ const ManageProducts = () => {
 
       {/* Product Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products?.data?.map((product: any) => (
+        {products?.map((product: any) => (
           <div
             key={product._id}
             className="bg-base-100 shadow-lg rounded-lg p-4 flex flex-col hover:shadow-xl transition-shadow duration-300"

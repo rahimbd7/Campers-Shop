@@ -22,7 +22,7 @@ const currentUser = useAppSelector(selectCurrentUser);
   const role = user?.role || "user"; // default role
   const isLogin = !!user;
 
-  const menu_items = getMenu(role, isLogin);
+  const menu_items = getMenu(role as Role, isLogin);
 
   const handleLogout = () => {
     dispatch(logout());

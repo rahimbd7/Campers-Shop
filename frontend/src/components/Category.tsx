@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useSelector } from "react-redux";
 import type { RootState } from "../redux/store";
-import { useGetCategoriesQuery } from "../redux/features/category/categoryApi";
 import CategoryCard from "./CategoryCard";
 
 const Category = () => {
   //call api
-  const { data, isLoading, isError } = useGetCategoriesQuery();
   const categoryData = useSelector(
     (state: RootState) => state.category.categories
   );

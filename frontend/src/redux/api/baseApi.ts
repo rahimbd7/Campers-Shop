@@ -10,7 +10,7 @@ import { logout, setBackendUser, setFirebaseUser } from "../features/auth/authSl
 import { getAuth } from "firebase/auth";
 
 const rawBaseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:3000/api",
+  baseUrl: import.meta.env.VITE_API_BASE_URL as string,
   credentials: "include", // ✅ sends refreshToken cookie for backend login
   prepareHeaders: (headers, { getState }) => {
     const { token } = (getState() as RootState).auth;

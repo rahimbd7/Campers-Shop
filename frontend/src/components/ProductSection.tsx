@@ -3,6 +3,7 @@ import React from "react";
 
 import ProductCart from "./ProductCart";
 import { useGetAllProductsQuery } from "../redux/features/products/productApi";
+import LoadingSpinner from './LoadingSpinner';
 
 interface ProductsSectionProps {
   title: string;
@@ -11,13 +12,13 @@ interface ProductsSectionProps {
 }
 
 const ProductsSection: React.FC<ProductsSectionProps> = ({ title, filterKey, headingColor }) => {
-  const { data: products, isLoading, isError } = useGetAllProductsQuery(undefined);
+  const { data: products, isLoading, isError } = useGetAllProductsQuery(undefined as any);
 
-  if (isLoading) return <p>Loading {title.toLowerCase()}...</p>;
+  if (isLoading) return <p><LoadingSpinner message="Products loading..." /></p>;
   if (isError) return <p>Failed to load products.</p>;
 
   // Dynamically filter based on the passed filterKey
-  const filteredProducts = products?.data?.filter((product: any) => product[filterKey]);
+  const filteredProducts = products?.filter((product: any) => product[filterKey]);
 
   if (!filteredProducts || filteredProducts.length === 0) {
     return <p>No {title.toLowerCase()} available.</p>;

@@ -1,21 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
+import type { Field } from "../../../interface/common";
 
-export interface Field {
-  name: string;
-  label: string;
-  type:
-    | "text"
-    | "number"
-    | "email"
-    | "password"
-    | "file"
-    | "select"
-    | "checkbox";
-  placeholder?: string;
-  options?: string[]; // For select fields
-  defaultValue?: any;
-}
+
 
 interface DynamicModalProps {
   title: string;
@@ -45,7 +32,7 @@ const DynamicModalForUserManagement: React.FC<DynamicModalProps> = ({
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type, checked } = e.target as HTMLInputElement;
     setFormData({
       ...formData,
       [name]: type === "checkbox" ? checked : value,

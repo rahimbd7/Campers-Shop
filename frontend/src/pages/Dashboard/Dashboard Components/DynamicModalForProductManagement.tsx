@@ -1,6 +1,14 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useState} from "react";
 import { useGetCategoriesQuery } from "../../../redux/features/category/categoryApi";
 
+interface ProductModalProps {
+  title: string;
+  fields: { name: string; label: string; type: string; defaultValue?: any }[];
+  onSubmit: (data: Record<string, any>, files: File[], removedOldImages: string[]) => void;
+  closeModal: () => void;
+  isEditMode?: boolean;
+}
 
 const DynamicModalForProductManagement: React.FC<ProductModalProps> = ({
   title,
@@ -154,7 +162,7 @@ const DynamicModalForProductManagement: React.FC<ProductModalProps> = ({
                     type={field.type}
                     name={field.name}
                     value={formData[field.name]}
-                    placeholder={field.placeholder}
+                    // placeholder={field.placeholder}
                     onChange={handleChange}
                     className="input input-bordered w-full"
                   />

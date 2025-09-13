@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import {
   confirmAction,
@@ -17,7 +18,7 @@ const ManageCategories = () => {
   const { data: categories } = useGetCategoriesQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
-  const { data: products } = useGetAllProductsQuery(undefined, {
+  const { data: products } = useGetAllProductsQuery(undefined as any , {
     refetchOnMountOrArgChange: true,
   });
 
@@ -28,7 +29,7 @@ const ManageCategories = () => {
 
   const handleDelete = async (categoryId: string, categoryName: string) => {
     const assignedProducts =
-      products?.data?.filter((p: any) => p.categoryId === categoryId) || [];
+      products?.filter((p: any) => p.categoryId === categoryId) || [];
 
     if (assignedProducts.length > 0) {
       notifyError(
@@ -55,7 +56,8 @@ const ManageCategories = () => {
 
   const handleAddCategory = async (formData: FormData) => {
     try {
-      await createCategory(formData).unwrap();
+      const payload = Object.fromEntries(formData.entries());
+      await createCategory(payload).unwrap();
       notifySuccess("Category created successfully!");
       setShowModal(false);
     } catch (error) {

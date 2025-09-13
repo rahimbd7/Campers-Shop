@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 const FAQ: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(0);
-const [faqs,setFaqs] = useState([
+const [faqs,setFaqs] = useState<{ question: string; answer: string}[]>([
     
 ])
   useEffect(() => {

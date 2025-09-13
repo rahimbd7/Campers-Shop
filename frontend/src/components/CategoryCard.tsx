@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
+import {type ICategory } from './../interface/ICategory';
 
-const CategoryCard = ({ categoryData }) => {
+
+const CategoryCard = ({ categoryData }: { categoryData: ICategory }) => {
   const navigate = useNavigate();
   const { _id, name, description, icon } = categoryData || {};
 
-  const handleCategoryProduct = (id, name) => {
+  const handleCategoryProduct = (id: string, name: string) => {
     navigate(`/products_by_category/${id}`, { state: { name } });
   };
 

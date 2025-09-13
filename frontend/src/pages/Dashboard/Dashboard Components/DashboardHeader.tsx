@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { LogOut, User } from "lucide-react";
 import { useDispatch } from "react-redux";
@@ -5,7 +6,7 @@ import { logout } from "../../../redux/features/auth/authSlice";
 import { NavLink } from "react-router-dom";
 
 
-const DashboardHeader = ({ user }: { user: any }) => {
+const DashboardHeader = ({ user }: { user:  any }) => {
   const [open, setOpen] = useState(false);
  const dispatch = useDispatch();
 

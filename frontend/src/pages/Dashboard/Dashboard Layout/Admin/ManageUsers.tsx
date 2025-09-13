@@ -13,6 +13,7 @@ import {
 } from "../../../../redux/features/user/userApis";
 import DynamicModalForUserManagement from "../../Dashboard Components/DynamicModalForUserManagement";
 import { generateFieldsFromObject } from "../../../../utils/DashboardUtils/generateFieldsFromObject";
+import type { FieldType } from "../../../../interface/common";
 
 const ManageUsers = () => {
   const { data: users } = useGetAllUsersQuery(undefined, {
@@ -26,6 +27,8 @@ const ManageUsers = () => {
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [isEditMode, setIsEditMode] = useState(false);
 
+ 
+
   const defaultUser = {
     name: "",
     email: "",
@@ -37,22 +40,22 @@ const ManageUsers = () => {
     profile_img: "",
   };
 
-  const overrides = {
-    role: {
-      type: "select",
-      options: ["admin", "user"],
-    },
-    password: {
-      placeholder: "Enter new password",
-    },
-    isDeleted: {
-      type: "checkbox",
-    },
-    profile_img: {
-      type: "file",
-      label: "Profile Image",
-    },
-  };
+const overrides: Record<string, { type?: FieldType; options?: string[]; placeholder?: string; label?: string }> = {
+  role: {
+    type: "select",
+    options: ["admin", "user"],
+  },
+  password: {
+    placeholder: "Enter new password",
+  },
+  isDeleted: {
+    type: "checkbox",
+  },
+  profile_img: {
+    type: "file",
+    label: "Profile Image",
+  },
+};
 
   const baseUserData = { ...defaultUser, ...(isEditMode ? selectedUser : {}) };
 

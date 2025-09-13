@@ -3,11 +3,17 @@ import { useGetProductByIdQuery } from "../../redux/features/products/productApi
 import { useAddToCart } from "../../utils/CartUtils/useAddToCart";
 import { useState, useEffect, useMemo } from "react";
 import { toast } from "react-toastify";
+interface Product {
+  name: string;
+  images: string[];
+  description: string;
+  price: number;
+}
 
 const ProductDetails = () => {
   const { productId } = useParams();
   const { data: product, isLoading } = useGetProductByIdQuery(productId as string);
-  const singleProduct = useMemo(() => product?.data || {}, [product]);
+  const singleProduct = useMemo<Product>(() => product||({} as Product), [product]);
 
   const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState("");

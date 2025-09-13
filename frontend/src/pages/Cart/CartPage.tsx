@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../redux/hooks";
 import { useGetAllProductsDetailsOfCartItemsQuery } from "../../redux/features/cart/cartApi";
@@ -7,6 +7,7 @@ import { removeFromCart } from "../../redux/features/cart/cartSlice";
 import ProductModal from "../../components/ProductCartModal";
 import NoDataFound from "../../components/NoDataFound";
 import { selectCurrentUser } from "../../redux/features/auth/authSelector";
+import type { ICart } from "../../interface/ICart";
 
 const CartPage = () => {
   const dispatch = useDispatch();
@@ -53,7 +54,7 @@ const CartPage = () => {
             </tr>
           </thead>
           <tbody>
-            {productsDetailsOfCartItems.map((item) => (
+            {productsDetailsOfCartItems.map((item: ICart ) => (
               <tr key={item._id}>
                 <td>
                   <img
@@ -69,9 +70,9 @@ const CartPage = () => {
                     className="btn btn-xs"
                     onClick={() =>
                       setEditingItem({
-                        productId: item._id,
+                        productId: item._id as string,
                         name: item.name,
-                        image: item.image,
+                        image: item.images[0] as string,
                         initialQuantity: item.quantity,
                       })
                     }
@@ -84,7 +85,7 @@ const CartPage = () => {
                 <td>
                   <button
                     className="btn btn-xs btn-error"
-                    onClick={() => dispatch(removeFromCart(item?._id))}
+                    onClick={() => dispatch(removeFromCart(item?._id as string))}
                   >
                     Remove
                   </button>

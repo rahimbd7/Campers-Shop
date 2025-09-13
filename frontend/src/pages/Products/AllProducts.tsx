@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useCallback } from "react";
 import { useSelector } from "react-redux";
 import ProductCart from "../../components/ProductCart";
@@ -7,6 +8,7 @@ import type { IProduct } from "../../interface/IProduct";
 import { useGetCategoriesQuery } from "../../redux/features/category/categoryApi";
 import type { ICategory } from "../../interface/ICategory";
 import {motion} from "framer-motion";
+import LoadingSpinner from "../../components/LoadingSpinner";
 const FilterSidebar = ({
   search,
   setSearch,
@@ -137,45 +139,50 @@ const AllProducts = () => {
   const [sortBy, setSortBy] = useState("name");
   const [sortOrder, setSortOrder] = useState("asc");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const { data:categories, isLoading, isError, error } = useGetCategoriesQuery();
+  const { data:categories, isLoading } = useGetCategoriesQuery();
 
    const cardVariants = {
   hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
 };
-  const [appliedFilters, setAppliedFilters] = useState({
-    search: "",
-    categoryId: "",
-    minPrice: "",
-    maxPrice: "",
-    sortBy: "name",
-    sortOrder: "asc",
-  });
 
-  const { refetch } = useGetAllProductsQuery(appliedFilters, {
-    refetchOnMountOrArgChange: true,
-  });
+const [appliedFilters, setAppliedFilters] = useState({
+  search: "",
+  categoryId: "",
+  minPrice: "",
+  maxPrice: "",
+  sortBy: "name",
+  sortOrder: "asc",
+});
 
-  const productData: IProduct[] = useSelector(
-    (state: RootState) => state.product.products
-  );
+const { refetch } = useGetAllProductsQuery(appliedFilters, {
+  refetchOnMountOrArgChange: true,
+});
 
-  const applyFilters = useCallback(() => {
-    setAppliedFilters({ search, categoryId, minPrice, maxPrice, sortBy, sortOrder });
-    setIsFilterOpen(false);
-    refetch();
-  }, [search, categoryId, minPrice, maxPrice, sortBy, sortOrder, refetch]);
 
-  const clearFilters = useCallback(() => {
-    setSearch(""); setCategoryId(""); setMinPrice(""); setMaxPrice("");
-    setSortBy("name"); setSortOrder("asc");
-    setAppliedFilters({ search: "", categoryId: "", minPrice: "", maxPrice: "", sortBy: "name", sortOrder: "asc" });
-    setIsFilterOpen(false);
-    refetch();
-  }, [refetch]);
+const productData: IProduct[] = useSelector(
+  (state: RootState) => state.product.products
+);
 
+const applyFilters = useCallback(() => {
+  setAppliedFilters({ search, categoryId, minPrice, maxPrice, sortBy, sortOrder });
+  setIsFilterOpen(false);
+  refetch();
+}, [search, categoryId, minPrice, maxPrice, sortBy, sortOrder, refetch]);
+
+const clearFilters = useCallback(() => {
+  setSearch(""); setCategoryId(""); setMinPrice(""); setMaxPrice("");
+  setSortBy("name"); setSortOrder("asc");
+  setAppliedFilters({ search: "", categoryId: "", minPrice: "", maxPrice: "", sortBy: "name", sortOrder: "asc" });
+  setIsFilterOpen(false);
+  refetch();
+}, [refetch]);
+
+if (isLoading) return <div><LoadingSpinner message="Products loading..." /></div>;
+  
   return (
     <div className="px-4 sm:px-6 lg:px-8 py-6">
+      
       <h1 className="text-3xl font-bold text-center mb-8">All Products</h1>
 
       {/* Mobile Filter Button */}

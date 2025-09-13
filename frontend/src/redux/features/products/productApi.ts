@@ -1,6 +1,7 @@
 import { baseApi } from "../../api/baseApi";
 import type { IProduct } from "../../../interface/IProduct";
 import { setProducts, setCategoryWiseProducts, setProductById } from "./productSlice";
+// import { IProduct } from './../../../interface/IProduct';
 
 export const productApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -35,11 +36,12 @@ export const productApi = baseApi.injectEndpoints({
         url: "/products/get-all-products",
         params: filters,
       }),
+      transformResponse: (response: { data: IProduct[] }) => response.data,
       providesTags: ["Product"],
       async onQueryStarted(_getAllProducts, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(setProducts(data.data));
+          dispatch(setProducts(data));
         } catch (error) {
           console.error("Error fetching all products:", error);
         }
@@ -50,11 +52,12 @@ export const productApi = baseApi.injectEndpoints({
       query: (categoryId) => ({
         url: `/products/category/${categoryId}`,
       }),
+       transformResponse: (response: { data: IProduct[] }) => response.data,
       providesTags: ["Product"],
       async onQueryStarted(_categoryId, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(setCategoryWiseProducts(data.data));
+          dispatch(setCategoryWiseProducts(data));
         } catch (error) {
           console.error("Error fetching products by category:", error);
         }
@@ -65,11 +68,12 @@ export const productApi = baseApi.injectEndpoints({
       query: (id) => ({
         url: `/products/get-product/${id}`,
       }),
+      transformResponse: (response: { data: IProduct }) => response.data,
       providesTags: ["Product"],
       async onQueryStarted(_id, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          dispatch(setProductById(data.data));
+          dispatch(setProductById(data));
         } catch (error) {
           console.error("Error fetching product by ID:", error);
         }

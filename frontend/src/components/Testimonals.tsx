@@ -3,7 +3,7 @@ import Feedback from "./Feedback";
 import Marquee from "react-fast-marquee";
 
 const Testimonals = () => {
-  const [feedback, setFeedback] = useState([]);
+  const [feedback, setFeedback] = useState<{id: number; name: string; feedback: string; rating: number; image: string}[]>([]);
 
   useEffect(() => {
     fetch("data/customersFeedback.json")
