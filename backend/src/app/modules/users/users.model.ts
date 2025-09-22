@@ -36,29 +36,30 @@ const userSchema = new Schema<IUser, IUserService>(
 );
 
 
+// Hash password before saving (only if modified and not already hashed)
 userSchema.pre('save', async function (next) {
-  const user = this
- if(user.password){
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_round)
-  );
- }
-  next()
-})
-// Hash on findOneAndUpdate (e.g., findByIdAndUpdate)
+  if (this.isModified('password') && this.password && !this.password.startsWith('$2b$')) {
+    this.password = await bcrypt.hash(
+      this.password,
+      Number(config.bcrypt_salt_round)
+    );
+  }
+  next();
+});
+
+// Hash password before findOneAndUpdate (only if provided and not already hashed)
 userSchema.pre('findOneAndUpdate', async function (next) {
   const update = this.getUpdate() as Partial<IUser>;
-  if (update.password) {
-    const hashed = await bcrypt.hash(
+  if (update.password && !update.password.startsWith('$2b$')) {
+    update.password = await bcrypt.hash(
       update.password,
       Number(config.bcrypt_salt_round)
     );
-    update.password = hashed;
     this.setUpdate(update);
   }
   next();
 });
+
 
 
 userSchema.statics.isUserExists = async function (email: string) {
