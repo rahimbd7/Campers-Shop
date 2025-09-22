@@ -7,7 +7,7 @@ import {getAuth } from 'firebase/auth'
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyChv-fJl1iOBeswG_pr8tw_-jPjFire64o",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: "campers-shop.firebaseapp.com",
   projectId: "campers-shop",
   storageBucket: "campers-shop.firebasestorage.app",

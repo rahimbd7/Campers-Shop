@@ -1,5 +1,5 @@
 # General
-.env
+.env*
 .env.local
 .env.prod
 .DS_Store
@@ -17,3 +17,4 @@ frontend/dist/
 
 #helper
 git_initial.txt
+
